@@ -1,0 +1,19 @@
+MKLROOT = /global/software/intel/composerxe-2011.0.084/mkl
+CC = g++ 
+CFLAGS = -O3 -fopenmp -m64 -Wall
+#CFLAGS = -O3 -m64 -Wall
+CINCLUDE = -I/home/pxiang/eigen  -I$(MKLROOT)/include -I/home/pxiang/gtest-1.7.0/include
+CLIB = -L$(MKLROOT)/lib/intel64  
+FLAGSLIB = -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lpthread  -lm 
+#FLAGSLIB = -lmkl_intel_lp64  -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm 
+
+
+SOURCES = complex_matrix.cpp  complex_matrix_test.cpp  generate_alpha_beta.cpp  generate_alpha_beta_test.cpp  integer_matrix.cpp  main.cpp  matrix.cpp  matrix_test.cpp  mics.cpp 
+
+test: $(SOURCES)
+	$(CC) $(CFLAGS) $(CINCLUDE)   $(SOURCES) $(CLIB) ../libgtest.a -o test
+# Tab before $(F90)$
+
+clean:
+	rm -f test
+# Tab before "rm"
