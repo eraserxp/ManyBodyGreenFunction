@@ -138,6 +138,31 @@ public:
 };
 
 
+// describe the possible 8 neighbors in 2D (for two particles)
+class Neighbors2D {
+public:
+	Neighbors2D() {
+		firstLeft = -1; // the left neighbor of the first particle, -1 means that the left neighbor doesn't exist
+		firstRight = -1;
+		firstTop = -1;
+		firstBottom = -1;
+		secondLeft = -1; //the left neighbor of the second particle, -1 means that the left neighbor doesn't exist
+		secondRight = -1;
+		secondTop = -1;
+		secondBottom = -1;
+	}
+
+	int firstLeft;
+	int firstRight;
+	int firstTop;
+	int firstBottom;
+	int secondLeft;
+	int secondRight;
+	int secondTop;
+	int secondBottom;
+};
+
+
 typedef struct {
 	int nmax;
 	double e0, t0, d0;
@@ -145,6 +170,14 @@ typedef struct {
 	unsigned e0seed, t0seed, d0seed;
 } Parameters;
 
+
+typedef struct {
+	int xmax; // maximum index in x axis (starting from zero)
+	int ynmax;// maximum index in y axis (starting from zero)
+	double e0, t0, d0;
+	double e0MaxDisorder, t0MaxDisorder, d0MaxDisorder;
+	unsigned e0seed, t0seed, d0seed;
+} Parameters2D;
 
 
 // use eigen c++ library

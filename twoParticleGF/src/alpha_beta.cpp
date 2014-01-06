@@ -4,7 +4,7 @@
  *  Created on: Dec 18, 2013
  *      Author: pxiang
  */
-#include "generate_alpha_beta.h"
+#include "alpha_beta.h"
 
 dcomplex convertToDcomplex(complex_mkl& mkl_complex) {
 	return dcomplex(mkl_complex.real, mkl_complex.imag);
@@ -621,7 +621,6 @@ CSMatrix fromRightToCenterSP(int Kc, dcomplex z, AlphaBetaSP& ab) {
 	CSMatrix tmp;
 
 	//printf("Inside fromRightToCenterSP:\n");
-
 
 	double sparsity;
 

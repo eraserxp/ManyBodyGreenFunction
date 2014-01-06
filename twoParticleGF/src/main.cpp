@@ -11,7 +11,7 @@
 #include "mics.h"
 
 #include "random_generator.h"
-#include "generate_alpha_beta.h"
+#include "alpha_beta.h"
 #include "matrix.h"
 #include "complex_matrix.h"
 #include "integer_matrix.h"

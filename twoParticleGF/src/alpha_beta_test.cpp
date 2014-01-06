@@ -5,7 +5,7 @@
  *      Author: pxiang
  */
 
-#include "generate_alpha_beta.h"
+#include "alpha_beta.h"
 #include "gtest/gtest.h"
 #include "mics.h"
 
