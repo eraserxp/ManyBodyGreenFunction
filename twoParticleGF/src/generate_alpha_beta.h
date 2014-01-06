@@ -129,6 +129,8 @@ private:
 
 void changeElements(CSMatrix& csm);
 
+CDMatrix solveDenseLinearEqs(CDMatrix& A, CDMatrix& B);
+
 CSMatrix solveDenseLinearEqs(CSMatrix& A, CSMatrix& B);
 
 CSMatrix solveSparseLinearEqs(CSMatrix& A, CSMatrix& B);

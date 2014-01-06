@@ -504,6 +504,11 @@ void changeElements(CSMatrix& csm) {
 }
 
 
+CDMatrix solveDenseLinearEqs(CDMatrix& A, CDMatrix& B) {
+	return A.partialPivLu().solve(B);
+}
+
+
 // this requires a lot of conversion between dense matrix and sparse matrix, it is not efficient
 CSMatrix solveDenseLinearEqs(CSMatrix& A, CSMatrix& B) {
 	CDMatrix AD(A);
