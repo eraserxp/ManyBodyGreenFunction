@@ -45,7 +45,7 @@ private:
 
 
 
-int delta(int i, int j);
+
 
 void generateIndexMatrix(int nmax, IntegerMatrix& Index, PairMatrix& VtoG, std::vector<int>& DimsOfV);
 

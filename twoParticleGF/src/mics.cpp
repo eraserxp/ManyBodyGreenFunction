@@ -101,3 +101,8 @@ std::vector<double> linspace(double start, double stop, int num) {
 	array.push_back(stop);
 	return array;
 }
+
+
+int delta(int i, int j) {
+	return i==j?1:0;
+}

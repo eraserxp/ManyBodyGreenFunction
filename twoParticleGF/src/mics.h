@@ -37,4 +37,6 @@ void read_double_column(std::string filename, int column, std::vector<double>& a
 
 std::vector<double> linspace(double start, double stop, int num=100);
 
+int delta(int i, int j);
+
 #endif /* MICS_H_ */

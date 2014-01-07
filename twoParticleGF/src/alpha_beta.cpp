@@ -39,9 +39,7 @@ double Hamiltonian::d(int n, int m) {
 	return d0 + rnm_d0(n,m)*d0MaxDisorder;
 }
 
-int delta(int i, int j) {
-	return i==j?1:0;
-}
+
 
 // generate an index matrix Index[i][j] = nth which represents the Green's function G(i,j)
 // is the nth item in vector V_{i+j}

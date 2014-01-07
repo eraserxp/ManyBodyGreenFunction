@@ -163,6 +163,24 @@ public:
 };
 
 
+// used to describe the interaction strengths between a particle
+// and its 4 neighours in 4 directions
+class InteractionInFourDirections {
+public:
+	InteractionInFourDirections() {
+		left = 0.0;
+		right = 0.0;
+		up = 0.0;
+		down = 0.0;
+	}
+
+	double left;
+	double right;
+	double up;
+	double down;
+};
+
+
 typedef struct {
 	int nmax;
 	double e0, t0, d0;
@@ -173,7 +191,7 @@ typedef struct {
 
 typedef struct {
 	int xmax; // maximum index in x axis (starting from zero)
-	int ynmax;// maximum index in y axis (starting from zero)
+	int ymax;// maximum index in y axis (starting from zero)
 	double e0, t0, d0;
 	double e0MaxDisorder, t0MaxDisorder, d0MaxDisorder;
 	unsigned e0seed, t0seed, d0seed;
