@@ -175,12 +175,16 @@ Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ym
 // we have restricted the index for site(xi, yi) must be small than that of (xj, yj)
 // DimsOfV: record the dimension of each V_K
 // VtoG maps from (xi+yi+xj+yj, nth) to (xi, yi, xj, yj)
-void generateIndexMatrix(int xmax, int ymax, Array4D& Index, QuartetListVector& VtoG,
+void generateIndexMatrix2D(int xmax, int ymax, IntegerMatrix& Index, QuartetListVector& VtoG,
 		std::vector<int>& DimsOfV) {
 	int nsum;
-	Index = Array4D(boost::extents[xmax+1][ymax+1][xmax+1][ymax+1]);
+	//Index = Array4D(boost::extents[xmax+1][ymax+1][xmax+1][ymax+1]);
+	int nsite = (xmax+1)*(ymax+1); // total number of sites
+	Index = IntegerMatrix(nsite, nsite);
 	VtoG.resize(xmax+xmax+ymax+ymax);
 	DimsOfV.resize(xmax+xmax+ymax+ymax);
+
+
 	// set all dimension to be zero initially
 	for (int i=0; i<DimsOfV.size(); ++i) {
 		DimsOfV[i] = 0;
@@ -194,9 +198,11 @@ void generateIndexMatrix(int xmax, int ymax, Array4D& Index, QuartetListVector& 
 		for (int y1=0; y1<ymax+1; y1++) {
 			for (int x2=0; x2<xmax+1; x2++) {
 				for (int y2=0; y2<ymax+1; y2++) {
-					if (coordinatesToIndex(xmax,ymax,x1,y1)<coordinatesToIndex(xmax,ymax,x2,y2)) {
+					int index1 = coordinatesToIndex(xmax,ymax,x1,y1);
+					int index2 = coordinatesToIndex(xmax,ymax,x2,y2);
+					if (index1 < index2) {
 						nsum = x1 + y1 + x2 + y2;
-						Index[x1][y1][x2][y2] = DimsOfV[nsum];
+						Index(index1, index2) = DimsOfV[nsum];
 						DimsOfV[nsum]+=1;
 						VtoG[nsum].push_back(Quartet(x1,y1,x2,y2));
 					}
