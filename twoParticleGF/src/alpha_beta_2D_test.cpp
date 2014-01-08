@@ -61,7 +61,55 @@ TEST(GenerateIndexMatrix2DTest,SomeRandomTest) {
 		EXPECT_TRUE(*it==*it2);
 	}
 
+}
 
 
 
+TEST(GenerateNeighbors2DTest, ThreeByThreeCrystal) {
+	/* y
+	 * ^
+	 * |
+	 * | 6	7	8
+	 * | 3	4	5
+	 * | 0	1	2
+	 * ------------> x
+	 */
+	int xmax = 2; // index starts from 0
+	int ymax = 2;
+	int xi, yi, xj, yj;
+	Neighbors2D neighbor;
+	Neighbors2D compare;
+
+
+	xi = 0;
+	yi = 0;
+	xj = 1;
+	yj = 0;
+	compare = Neighbors2D(-1,-1,-1,-1,-1,2,1,-1);
+	neighbor = generateNeighbors2D(xi, yi, xj, yj, xmax, ymax);
+	EXPECT_TRUE(neighbor==compare);
+
+	xi = 0;
+	yi = 0;
+	xj = 1;
+	yj = 1;
+	compare = Neighbors2D(-1,1,1,-1,0,2,2,0);
+	neighbor = generateNeighbors2D(xi, yi, xj, yj, xmax, ymax);
+	EXPECT_TRUE(neighbor==compare);
+
+	xi = 0;
+	yi = 1;
+	xj = 1;
+	yj = 1;
+	compare = Neighbors2D(-1,-1,-1,0,-1,2,2,-1);
+	neighbor = generateNeighbors2D(xi, yi, xj, yj, xmax, ymax);
+	EXPECT_TRUE(neighbor==compare);
+
+	xi = 1;
+	yi = 1;
+	xj = 2;
+	yj = 2;
+	compare = Neighbors2D(0,2,2,0,1,-1,-1,1);
+	neighbor = generateNeighbors2D(xi, yi, xj, yj, xmax, ymax);
+	EXPECT_TRUE(neighbor==compare);
 }

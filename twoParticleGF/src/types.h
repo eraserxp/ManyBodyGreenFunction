@@ -210,6 +210,28 @@ public:
 		secondDown = -1;
 	}
 
+	Neighbors2D(int left1, int right1, int up1, int down1, int left2, int right2, int up2, int down2) {
+		firstLeft = left1; // the left neighbor of the first particle, -1 means that the left neighbor doesn't exist
+		firstRight = right1;
+		firstUp = up1;
+		firstDown = down1;
+		secondLeft = left2; //the left neighbor of the second particle, -1 means that the left neighbor doesn't exist
+		secondRight = right2;
+		secondUp = up2;
+		secondDown = down2;
+	}
+
+	bool operator==(const Neighbors2D& other) {
+		return firstLeft==other.firstLeft &&
+				firstRight==other.firstRight &&
+				firstUp==other.firstUp &&
+				firstDown==other.firstDown &&
+				secondLeft==other.secondLeft &&
+				secondRight==other.secondRight &&
+				secondUp==other.secondUp &&
+				secondDown==other.secondDown;
+	}
+
 	int firstLeft;
 	int firstRight;
 	int firstUp;
