@@ -132,14 +132,14 @@ Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ym
 		 ns.firstRight = xi + 1;
 	 }
 
-	 int topNeighbor = coordinatesToIndex(xmax, ymax, xi, yi+1);
-	 if (topNeighbor!=-1 && topNeighbor<indexJ) {
-		 ns.firstTop = yi + 1;
+	 int upNeighbor = coordinatesToIndex(xmax, ymax, xi, yi+1);
+	 if (upNeighbor!=-1 && upNeighbor<indexJ) {
+		 ns.firstUp = yi + 1;
 	 }
 
-	 int bottomNeighbor = coordinatesToIndex(xmax, ymax, xi, yi-1);
-	 if (bottomNeighbor!=-1 && bottomNeighbor<indexJ) {
-		 ns.firstBottom = yi - 1;
+	 int downNeighbor = coordinatesToIndex(xmax, ymax, xi, yi-1);
+	 if (downNeighbor!=-1 && downNeighbor<indexJ) {
+		 ns.firstDown = yi - 1;
 	 }
 
 
@@ -155,14 +155,14 @@ Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ym
 		 ns.secondRight = xj + 1;
 	 }
 
-	 topNeighbor = coordinatesToIndex(xmax, ymax, xj, yj+1);
-	 if (topNeighbor!=-1 && topNeighbor>indexI) {
-		 ns.secondTop = yj + 1;
+	 upNeighbor = coordinatesToIndex(xmax, ymax, xj, yj+1);
+	 if (upNeighbor!=-1 && upNeighbor>indexI) {
+		 ns.secondUp = yj + 1;
 	 }
 
-	 bottomNeighbor = coordinatesToIndex(xmax, ymax, xj, yj-1);
-	 if (bottomNeighbor!=-1 && bottomNeighbor>indexI) {
-		 ns.secondBottom = yj - 1;
+	 downNeighbor = coordinatesToIndex(xmax, ymax, xj, yj-1);
+	 if (downNeighbor!=-1 && downNeighbor>indexI) {
+		 ns.secondDown = yj - 1;
 	 }
 
 	 return ns;
@@ -233,8 +233,9 @@ AlphaBeta2D::AlphaBeta2D(Parameters2D& ps):ham(ps) {
 
 void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta) {
 	int rows = DimsOfV[nsum];
-	int cols = (nsum-1<0)? 0:DimsOfV[nsum-1];
-	int cols2 = (nsum+1<2*nmax)? DimsOfV[nsum+1]:0;
+	int cols = (nsum-1<0)? 0:DimsOfV[nsum-1]; //nsum-1 can't smaller than 0
+	int cols2 = (nsum+1<xmax+ymax+xmax+ymax-1)? DimsOfV[nsum+1]:0; // nsum+1 can't be larger than that
+	// if cols and cols exceed the range, we just set them to zero
 
 	alpha = ComplexMatrix(rows,cols,true); // alpha is initialized to 0 initially
 	beta = ComplexMatrix(rows,cols2,true);
@@ -248,9 +249,9 @@ void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& al
 		int y1 = p.FirstY();
 		int x2 = p.SecondX(); // coordinates for the second particle
 		int y2 = p.SecondY();
-		int index1 = coordinatesToIndex(xmax,ymax,x1,y1);
-		int index2 = coordinatesToIndex(xmax,ymax,x2,y2);
-		int ith = Index(index1,index2);
+		int index1 = coordinatesToIndex(xmax,ymax,x1,y1); // index for the first particle
+		int index2 = coordinatesToIndex(xmax,ymax,x2,y2); // index for the second particle
+		int ith = Index(index1,index2); // the order of state (index1, index2) in V_nsum
 		complex_mkl denominator = { z.real -ham.energyAtSite(x1, y1)-
 				                       ham.energyAtSite(x2, y2)-
 				                   // first particle is the left nearest neighbor of the second

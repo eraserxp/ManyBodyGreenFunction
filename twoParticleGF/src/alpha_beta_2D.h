@@ -59,7 +59,7 @@ public:
 	int GetXmax();
 	int GetYmax();
 	// obtain the factor in front of G(ni1, ni2) in the equations for Green's functions
-	complex_mkl GetFactor(int ni1, int ni2, complex_mkl z);
+	complex_mkl GetFactor(int x1_i, int y1_i, int x2_i, int y2_i, complex_mkl z);
 
 private:
 	int xmax;
