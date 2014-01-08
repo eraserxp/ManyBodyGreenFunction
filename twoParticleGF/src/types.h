@@ -83,6 +83,13 @@ public:
 		return secondY;
 	}
 
+	//define == for the Quartet class
+	bool operator==(const Quartet &other) const {
+	  return firstX==other.firstX && firstY==other.firstY
+			  && secondX==other.secondX && secondY==other.secondY;
+	}
+
+
 	~Quartet() {}
 
 private:
@@ -91,6 +98,7 @@ private:
 	int secondX;
 	int secondY;
 };
+
 
 
 

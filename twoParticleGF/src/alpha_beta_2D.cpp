@@ -194,10 +194,10 @@ void generateIndexMatrix2D(int xmax, int ymax, IntegerMatrix& Index, QuartetList
 		VtoG[i] = QuartetList();
 	}
 
-	for (int x1=0; x1<xmax+1; x1++) {
-		for (int y1=0; y1<ymax+1; y1++) {
-			for (int x2=0; x2<xmax+1; x2++) {
-				for (int y2=0; y2<ymax+1; y2++) {
+	for (int x1=0; x1<=xmax; x1++) {
+		for (int y1=0; y1<=ymax; y1++) {
+			for (int x2=0; x2<=xmax; x2++) {
+				for (int y2=0; y2<=ymax; y2++) {
 					int index1 = coordinatesToIndex(xmax,ymax,x1,y1);
 					int index2 = coordinatesToIndex(xmax,ymax,x2,y2);
 					if (index1 < index2) {
