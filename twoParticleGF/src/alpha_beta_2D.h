@@ -13,6 +13,7 @@
 #include "integer_matrix.h"
 
 #include "random_generator.h"
+#include "alpha_beta.h"
 
 
 #include <vector>
@@ -58,6 +59,8 @@ public:
 	void FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta);
 	int GetXmax();
 	int GetYmax();
+	int GetIndex(int x1, int y1, int x2, int y2);
+	int GetDimOfV(int nsum);
 	// obtain the factor in front of G(ni1, ni2) in the equations for Green's functions
 	complex_mkl GetFactor(int x1_i, int y1_i, int x2_i, int y2_i, complex_mkl z);
 
@@ -73,5 +76,11 @@ private:
 	std::vector<int> DimsOfV;
 };
 
+ComplexMatrix fromRightToCenter2D(int Kc, complex_mkl z, AlphaBeta2D& ab);
+ComplexMatrix fromLeftToCenter2D(int Kc, complex_mkl z, AlphaBeta2D& ab);
+ComplexMatrix solveVnc2D(int x1_i, int y1_i, int x2_i, int y2_i, complex_mkl z, AlphaBeta2D& ab);
+
+void generateDensityOfState2D(int x1_i, int y1_i, int x2_i, int y2_i, Parameters2D& pars,
+		        const std::vector<complex_mkl>& zList, std::vector<double>& rhoList);
 
 #endif

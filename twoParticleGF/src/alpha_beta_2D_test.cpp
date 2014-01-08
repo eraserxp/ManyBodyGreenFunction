@@ -113,3 +113,57 @@ TEST(GenerateNeighbors2DTest, ThreeByThreeCrystal) {
 	neighbor = generateNeighbors2D(xi, yi, xj, yj, xmax, ymax);
 	EXPECT_TRUE(neighbor==compare);
 }
+
+TEST(SolveVnc2DTest, Small) {
+	Parameters2D pars;
+	pars.xmax = 30;
+	pars.ymax = 30;
+	pars.e0 = 0.0;
+	pars.t0 = 1.0;
+	pars.d0 = 1.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 1.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+	int x1_i = pars.xmax/2-1;
+	int y1_i = pars.ymax/2;
+	int x2_i = pars.xmax/2;
+	int y2_i = pars.ymax/2;
+	AlphaBeta2D ab(pars);
+	complex_mkl z = {1.0, 0.1};
+	ComplexMatrix Vnc;
+	for (int i=0; i<3; ++i) {
+		z.real = -6 + 1.2*i;
+		z.imag = 0.1;
+		Vnc = solveVnc2D(x1_i, y1_i, x2_i, y2_i, z, ab);
+	}
+
+	EXPECT_EQ(2,2);
+}
+
+
+
+TEST(GenerateDensityOfState2D, SmallCrystal) {
+	Parameters2D pars;
+	pars.xmax = 30;
+	pars.ymax = 30;
+	pars.e0 = 0.0;
+	pars.t0 = 5.0;
+	pars.d0 = 15.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+	int x1_i = pars.xmax/2-1;
+	int y1_i = pars.ymax/2;
+	int x2_i = pars.xmax/2;
+	int y2_i = pars.ymax/2;
+
+	std::vector<complex_mkl> zList(101);
+	std::vector<double> zRealList(101);
+	for (int i=0; i<zList.size(); ++i) {
+		zRealList[i]=-50 + i;
+		zList[i].real = -50 + i;
+		zList[i].imag = 0.1;
+	}
+	std::vector<double> rhoList;
+	generateDensityOfState2D(x1_i, y1_i, x2_i, y2_i, pars,zList,rhoList);
+	save_two_arrays("rho_vs_energy_2D.txt", zRealList, rhoList);
+	EXPECT_EQ(2,2);
+}

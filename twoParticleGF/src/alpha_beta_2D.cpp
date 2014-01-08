@@ -233,22 +233,25 @@ AlphaBeta2D::AlphaBeta2D(Parameters2D& ps):ham(ps) {
 
 void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta) {
 	int rows = DimsOfV[nsum];
-	int cols = (nsum-1<0)? 0:DimsOfV[nsum-1]; //nsum-1 can't smaller than 0
-	int cols2 = (nsum+1<xmax+ymax+xmax+ymax-1)? DimsOfV[nsum+1]:0; // nsum+1 can't be larger than that
+	int cols = (nsum-1>=1)? DimsOfV[nsum-1]:0; //nsum-1 can't smaller than 1
+	int cols2 = (nsum+1<=xmax+ymax+xmax+ymax-1)? DimsOfV[nsum+1]:0; // nsum+1 can't be larger than that
 	// if cols and cols exceed the range, we just set them to zero
-
+//	printf("1\n");
 	alpha = ComplexMatrix(rows,cols,true); // alpha is initialized to 0 initially
+//	printf("2\n");
 	beta = ComplexMatrix(rows,cols2,true);
+//	printf("3\n");
 
 	// fill in the matrix row by row
 	#pragma omp parallel for
 	for (QuartetList::iterator it=VtoG[nsum].begin(); it!=VtoG[nsum].end(); ++it) {
-		//Pair p = VtoG(nsum, ith); // obtain g(xi,yi,xj,yj) which is ith item in V_nsum
+//		printf("4\n");
 		Quartet p = *it; // retrieve the coordinates (xi,yi,xj,yj) from the vector V_nsum
 		int x1 = p.FirstX(); // coordinates for the first particle
 		int y1 = p.FirstY();
 		int x2 = p.SecondX(); // coordinates for the second particle
 		int y2 = p.SecondY();
+//		printf("5\n");
 		int index1 = coordinatesToIndex(xmax,ymax,x1,y1); // index for the first particle
 		int index2 = coordinatesToIndex(xmax,ymax,x2,y2); // index for the second particle
 		int ith = Index(index1,index2); // the order of state (index1, index2) in V_nsum
@@ -289,8 +292,8 @@ void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& al
 			int index1_up = coordinatesToIndex(xmax,ymax,x1,y1+1);
 			int jth = Index(index1_up,index2);
 			double t = ham.t(x1, y1, 'U');
-			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
-			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+			beta(ith,jth).real = t*denominator.real/denominatorSquared;
+			beta(ith,jth).imag = -t*denominator.imag/denominatorSquared;
 		}
 
 		if (ns.firstDown!=-1) { // the first particle has down neighbor
@@ -328,8 +331,8 @@ void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& al
 			int index2_up = coordinatesToIndex(xmax,ymax,x2,y2+1);
 			int jth = Index(index1,index2_up);
 			double t = ham.t(x2, y2, 'U');
-			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
-			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+			beta(ith,jth).real = t*denominator.real/denominatorSquared;
+			beta(ith,jth).imag = -t*denominator.imag/denominatorSquared;
 		}
 
 		if (ns.secondDown!=-1) { // the second particle has down neighbor
@@ -346,8 +349,15 @@ void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& al
 }
 
 
+int AlphaBeta2D::GetIndex(int x1, int y1, int x2, int y2) {
+	int index1 = coordinatesToIndex(xmax,ymax,x1,y1);
+	int index2 = coordinatesToIndex(xmax,ymax,x2,y2);
+	return Index(index1, index2);
+}
 
-
+int AlphaBeta2D::GetDimOfV(int nsum) {
+	return DimsOfV[nsum];
+}
 
 int AlphaBeta2D::GetXmax() {
 	return xmax;
@@ -367,3 +377,97 @@ complex_mkl AlphaBeta2D::GetFactor(int x1_i, int y1_i, int x2_i, int y2_i, compl
 				             z.imag};
 }
 
+
+ComplexMatrix fromRightToCenter2D(int Kc, complex_mkl z, AlphaBeta2D& ab) {
+	int xmax = ab.GetXmax();
+	int ymax = ab.GetYmax();
+	int K = xmax + ymax + xmax + ymax -1;
+	ComplexMatrix alphan;
+	ComplexMatrix betan;
+	ab.FillAlphaBetaMatrix(K,z,alphan, betan);
+	ComplexMatrix AnPlusOne = alphan;
+	ComplexMatrix tmp1;
+
+	for (int n=K-1; n>=Kc+1; n--) {
+		ab.FillAlphaBetaMatrix(n,z,alphan, betan);
+		tmp1 = betan*AnPlusOne;
+		changeElements(tmp1);
+		solveLinearEqs(tmp1, alphan);
+		AnPlusOne = alphan;
+	}
+
+	return AnPlusOne;
+}
+
+
+ComplexMatrix fromLeftToCenter2D(int Kc, complex_mkl z, AlphaBeta2D& ab) {
+	int xmax = ab.GetXmax();
+	int ymax = ab.GetYmax();
+	int K = 1;
+	ComplexMatrix alphan;
+	ComplexMatrix betan;
+	ab.FillAlphaBetaMatrix(K,z,alphan, betan);
+	ComplexMatrix AnMinusOneTilde = betan;
+	ComplexMatrix tmp1;
+
+	for (int n=K+1; n<=Kc-1; n++) {
+		ab.FillAlphaBetaMatrix(n,z,alphan, betan);
+		tmp1 = alphan*AnMinusOneTilde;
+		changeElements(tmp1);
+		solveLinearEqs(tmp1, betan); //betan now contains the solution of AX = B
+		AnMinusOneTilde = betan;
+	}
+
+	return AnMinusOneTilde;
+}
+
+
+//ComplexMatrix solveVnc(int ni1, int ni2, complex_double z, Parameters& pars) {
+//	AlphaBeta ab(pars);
+ComplexMatrix solveVnc2D(int x1_i, int y1_i, int x2_i, int y2_i, complex_mkl z, AlphaBeta2D& ab) {
+	int Kc = x1_i + y1_i + x2_i + y2_i;
+	ComplexMatrix alphanc;
+	ComplexMatrix betanc;
+//	printf("1\n");
+	ab.FillAlphaBetaMatrix(Kc,z,alphanc, betanc);
+//	printf("2\n");
+	ComplexMatrix AncPlusOne = fromRightToCenter2D(Kc,z,ab);
+//	printf("3\n");
+	ComplexMatrix AncMinusOneTilde = fromLeftToCenter2D(Kc,z,ab);
+//	printf("4\n");
+	ComplexMatrix mat1 = alphanc*AncMinusOneTilde;
+	mat1.AddInPlace(betanc*AncPlusOne);
+	changeElements(mat1);
+
+	// calculate the dimension of the const vector C
+	int n = ab.GetDimOfV(Kc);
+	// find out which term is not zero
+	int m = ab.GetIndex(x1_i, y1_i, x2_i, y2_i);
+
+	ComplexMatrix constVector(n, 1, true);
+	complex_mkl denominator =  ab.GetFactor(x1_i, y1_i, x2_i, y2_i, z);
+	//constVector(m,0) = complex_double(1.0, 0.0)/denominator;
+	double square = denominator.real*denominator.real + denominator.imag*denominator.imag;
+	constVector(m,0).real = denominator.real/square;
+	constVector(m,0).imag = -denominator.imag/square;
+
+	solveLinearEqs(mat1, constVector); // now constVector contains the solution
+	return constVector;
+}
+
+
+void generateDensityOfState2D(int x1_i, int y1_i, int x2_i, int y2_i, Parameters2D& pars,
+		        const std::vector<complex_mkl>& zList, std::vector<double>& rhoList) {
+	complex_mkl z;
+	ComplexMatrix Vnc;
+	AlphaBeta2D ab(pars);
+
+	int nth;
+	rhoList.empty();
+	for (int i=0; i<zList.size(); ++i) {
+		z = zList[i];
+		Vnc = solveVnc2D(x1_i, y1_i, x2_i, y2_i,z,ab);
+		nth = ab.GetIndex(x1_i, y1_i, x2_i, y2_i);
+		rhoList.push_back(-Vnc(nth,0).imag/M_PI);
+	}
+}

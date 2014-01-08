@@ -16,6 +16,7 @@
 #include "complex_matrix.h"
 #include "integer_matrix.h"
 #include "gtest/gtest.h"
+#include "alpha_beta_2D.h"
 
 
 void someTest() {
@@ -227,6 +228,35 @@ void SpTest() {
 }
 
 
+void test_2d() {
+	Parameters2D pars;
+	pars.xmax = 10;
+	pars.ymax = 10;
+	pars.e0 = 0.0;
+	pars.t0 = 1.0;
+	pars.d0 = 1.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 1.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+	int x1_i = pars.xmax/2-1;
+	int y1_i = pars.ymax/2;
+	int x2_i = pars.xmax/2;
+	int y2_i = pars.ymax/2;
+//	printf("1\n");
+	AlphaBeta2D ab(pars);
+//	printf("2\n");
+	complex_mkl z = {1.0, 0.1};
+	ComplexMatrix Vnc;
+	for (int i=0; i<100; ++i) {
+		z.real = -6 + 1.2*i;
+		z.imag = 0.1;
+//		printf("3\n");
+		Vnc = solveVnc2D(x1_i, y1_i, x2_i, y2_i, z, ab);
+//		printf("4\n");
+	}
+
+}
+
+
 
 
 int main(int argc, char **argv){
@@ -236,6 +266,7 @@ int main(int argc, char **argv){
 //	someTest();
 
 //	checkSparseness();
+//	test_2d();
 
 	::testing::InitGoogleTest(&argc, argv);
 	int i= RUN_ALL_TESTS();
