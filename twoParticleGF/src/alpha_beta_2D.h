@@ -49,7 +49,7 @@ int coordinatesToIndex(int xmax, int ymax, int xi, int yi);
 
 Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ymax);
 
-void generateIndexMatrix(int xmax, int ymax, Array4D& Index, QuartetMatrix& VtoG,
+void generateIndexMatrix(int xmax, int ymax, Array4D& Index, QuartetListVector& VtoG,
 		std::vector<int>& DimsOfV);
 
 #endif

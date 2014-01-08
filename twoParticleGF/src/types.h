@@ -23,6 +23,8 @@ typedef std::complex<double> dcomplex;
 //#define MKL_Complex16 complex_double
 typedef MKL_Complex16 complex_mkl;
 
+#include <list>
+#include <vector>
 
 
 // define my own pair
@@ -89,6 +91,7 @@ private:
 	int secondX;
 	int secondY;
 };
+
 
 
 // two-dimensional array of Pairs
@@ -161,75 +164,11 @@ private:
 	Pair **p;
 };
 
+typedef std::list<Quartet> QuartetList;
 
-class QuartetMatrix {
-public:
-	// constructor
-	QuartetMatrix() {
-		p = NULL;
-		rows = 0;
-		cols = 0;
-	}
-
-	// constructor
-	QuartetMatrix(int rows_count, int cols_count) {
-		rows = rows_count;
-		cols = cols_count;
-		p = new Quartet*[rows];
-		for (int i=0; i<rows; ++i) {
-			p[i] = new Quartet[cols];
-		}
-	}
-
-	//assignment operator
-	QuartetMatrix& operator= (const QuartetMatrix& pm) {
-		// destroy the original one
-		if (p!=NULL) {
-			for (int i=0; i<rows; ++i) {
-				delete [] p[i];
-				p[i]= NULL;
-			}
-			delete [] p;
-			p = NULL;
-		}
-		// construct a new one
-		rows = pm.rows;
-		cols = pm.cols;
-		p = new Quartet*[rows];
-		for (int i=0; i<rows; ++i) {
-			p[i] = new Quartet[cols];
-		}
-		// assign the value of pm to p
-		for (int i=0; i<rows; ++i) {
-			for (int j=0; j<cols; ++j) {
-				p[i][j] = pm.p[i][j];
-			}
-		}
-		return *this;
-	}
-
-	// return the matrix element m(i,j)
-	Quartet& operator()(int i, int j) {
-		return p[i][j];
-	}
-
-	// destructor
-	~QuartetMatrix() {
-		if (p!=NULL) {
-			for (int i=0; i<rows; ++i) {
-				delete [] p[i];
-				p[i]= NULL;
-			}
-			delete [] p;
-			p = NULL;
-		}
-	}
-
-private:
-	int rows;
-	int cols;
-	Quartet **p;
-};
+// we use the linked-list to save memory
+// each item of the vector is a list of quartet which is expandable
+typedef std::vector< QuartetList > QuartetListVector;
 
 
 
