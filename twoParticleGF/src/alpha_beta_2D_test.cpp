@@ -9,8 +9,8 @@
 #include "gtest/gtest.h"
 
 TEST(GenerateIndexMatrix2DTest,TenByTen) {
-	int xmax = 30;
-	int ymax = 30;
+	int xmax = 50;
+	int ymax = 50;
 	IntegerMatrix Index;
 	QuartetListVector VtoG;
 	std::vector<int> DimsOfV;
