@@ -438,7 +438,7 @@ TEST(SolveVncSPTest, DISABLED_OneThousandSites) {
 
 TEST(GenerateDensityOfState, comparedWithMathematicaResult) {
 	Parameters pars;
-	pars.nmax = 201;
+	pars.nmax = 101;
 	pars.e0 = 0.0;
 	pars.t0 = 5.0;
 	pars.d0 = 15.0;
@@ -462,7 +462,7 @@ TEST(GenerateDensityOfState, comparedWithMathematicaResult) {
 
 TEST(GenerateDensityOfStateSP, comparedWithMathematicaResult) {
 	Parameters pars;
-	pars.nmax = 201;
+	pars.nmax = 101;
 	pars.e0 = 0.0;
 	pars.t0 = 5.0;
 	pars.d0 = 15.0;

@@ -45,6 +45,7 @@ double Hamiltonian::d(int n, int m) {
 // is the nth item in vector V_{i+j}
 // we have constricted that G(i,j) for i<j
 // DimsOfV: record the dimension of each V_K
+// VtoG maps from (i+j, nth) to (i,j)
 void generateIndexMatrix(int nmax, IntegerMatrix& Index, PairMatrix& VtoG, std::vector<int>& DimsOfV) {
 	int nth;
 	int j;
@@ -558,10 +559,11 @@ CSMatrix solveSparseLinearEqs(CSMatrix& A, CSMatrix& B) {
 
 		DVector x_abs = x.array().abs2();
 		//double abs_cutoff = x_abs.maxCoeff()/1000.0;
-		double abs_cutoff = x_abs.maxCoeff()/100.0;
+		double abs_cutoff = x_abs.maxCoeff()/1000.0;
 		for (int r=0; r<x.rows(); ++r) {
 			//if (std::abs(r-i)<=5 || std::abs(r-x.rows())<=5 || x_abs(r) > abs_cutoff) {
-			if (std::abs(r-i)<= 50 || x_abs(r) > abs_cutoff) {
+			//if (std::abs(r-i)<= 50 || x_abs(r) > abs_cutoff) {
+			if (x_abs(r) > abs_cutoff) {
 
 				X.coeffRef(r,i) = x(r);
 			}
@@ -630,7 +632,7 @@ CSMatrix fromRightToCenterSP(int Kc, dcomplex z, AlphaBetaSP& ab) {
 		tmp = betan*AnPlusOne;
 		changeElements(tmp);
 		// when the sparsity of alphan and beta is about 1%, switch to the sparse solver
-		if (sparsity < 0.01) {
+		if (sparsity < 0.005) {
 			AnPlusOne = solveSparseLinearEqs(tmp, alphan);
 		} else { //use the dense solver
 			AnPlusOne = solveDenseLinearEqs(tmp, alphan);
@@ -648,17 +650,22 @@ void checkSparsenessRightToCenter(int Kc, dcomplex z, AlphaBetaSP& ab) {
 	CSMatrix betan;
 	ab.FillAlphaBetaMatrix(K,z,alphan, betan);
 	CSMatrix AnPlusOne = alphan;
-	CSMatrix tmp1;
+	CSMatrix tmp;
+	double sparsity;
 	//printf("Inside fromRightToCenterSP:\n");
 
 	for (int n=K-1; n>=Kc+1; n--) {
-		//printf("\t nsum = %3d\n", n);
 		ab.FillAlphaBetaMatrix(n,z,alphan, betan);
+		sparsity = 2.0/alphan.rows();
 
-
-		tmp1 = betan*AnPlusOne;
-		changeElements(tmp1);
-		AnPlusOne = solveSparseLinearEqs(tmp1, alphan);
+		tmp = betan*AnPlusOne;
+		changeElements(tmp);
+		// when the sparsity of alphan and beta is about 1%, switch to the sparse solver
+		if (sparsity < 0.001) {
+			AnPlusOne = solveSparseLinearEqs(tmp, alphan);
+		} else { //use the dense solver
+			AnPlusOne = solveDenseLinearEqs(tmp, alphan);
+		}
 		double nonZeroPercent = (1.0*AnPlusOne.nonZeros())/(AnPlusOne.rows()*AnPlusOne.cols());
 		printf("nsum=%d     non-zero percent:    %5f\n", n, nonZeroPercent);
 	}
@@ -683,7 +690,7 @@ CSMatrix fromLeftToCenterSP(int Kc, dcomplex z, AlphaBetaSP& ab) {
 		tmp = alphan*AnMinusOneTilde;
 		changeElements(tmp);
 
-		if (sparsity < 0.01) {
+		if (sparsity < 0.005) {
 			AnMinusOneTilde = solveSparseLinearEqs(tmp, betan);
 		} else { //use the dense solver
 			AnMinusOneTilde = solveDenseLinearEqs(tmp, betan);
@@ -701,16 +708,25 @@ void checkSparsenessLeftToCenter(int Kc, dcomplex z, AlphaBetaSP& ab) {
 	CSMatrix betan;
 	ab.FillAlphaBetaMatrix(K,z,alphan, betan);
 	CSMatrix AnMinusOneTilde = betan;
-	CSMatrix tmp1;
+	CSMatrix tmp;
+	double sparsity;
 
 	for (int n=K+1; n<=Kc-1; n++) {
 		ab.FillAlphaBetaMatrix(n,z,alphan, betan);
-		tmp1 = alphan*AnMinusOneTilde;
-		changeElements(tmp1);
-		AnMinusOneTilde = solveSparseLinearEqs(tmp1, betan);
+		sparsity = 2.0/alphan.rows();
+
+		tmp = alphan*AnMinusOneTilde;
+		changeElements(tmp);
+
+		if (sparsity < 0.001) {
+			AnMinusOneTilde = solveSparseLinearEqs(tmp, betan);
+		} else { //use the dense solver
+			AnMinusOneTilde = solveDenseLinearEqs(tmp, betan);
+		}
 		double nonZeroPercent = AnMinusOneTilde.nonZeros();//(100.0*AnMinusOneTilde.nonZeros())/(AnMinusOneTilde.rows()*AnMinusOneTilde.cols());
 		nonZeroPercent = nonZeroPercent/(AnMinusOneTilde.rows()*AnMinusOneTilde.cols());
-		printf("nsum=%d     non-zero percent:    %5f\n", n, nonZeroPercent);
+		printf("nsum=%d     row=%d	cols=%d	 non-zero percent:  %5f\n", n, AnMinusOneTilde.rows(),
+				                                            AnMinusOneTilde.cols(), nonZeroPercent);
 	}
 
 }
@@ -718,7 +734,7 @@ void checkSparsenessLeftToCenter(int Kc, dcomplex z, AlphaBetaSP& ab) {
 
 void checkSparseness() {
 	Parameters pars;
-	pars.nmax = 400;
+	pars.nmax = 5001;
 	pars.e0 = 0.0;
 	pars.t0 = 5.0;
 	pars.d0 = 15.0;
@@ -727,12 +743,12 @@ void checkSparseness() {
 	int ni1 = pars.nmax/2;
 	int ni2 = ni1 + 1;
 	AlphaBetaSP ab(pars);
-	dcomplex z(12.0, 0.1);
+	dcomplex z(2.0, 0.1);
 	int Kc = ni1 + ni2;
 	CSMatrix alphanc;
 	CSMatrix betanc;
 	ab.FillAlphaBetaMatrix(Kc,z,alphanc, betanc);
-	checkSparsenessRightToCenter(Kc,z,ab);
+	//checkSparsenessRightToCenter(Kc,z,ab);
 	checkSparsenessLeftToCenter(Kc,z,ab);
 }
 

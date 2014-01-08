@@ -51,6 +51,46 @@ private:
 	int second;
 };
 
+
+
+class Quartet {
+
+public:
+	Quartet(){}
+
+	Quartet(int xi, int yi, int xj, int yj) {
+		firstX = xi;
+		firstY = yi;
+		secondX = xj;
+		secondY = yj;
+	}
+
+	int FirstX() {
+		return firstX;
+	}
+
+	int FirstY() {
+		return firstY;
+	}
+
+	int SecondX() {
+		return secondX;
+	}
+
+	int SecondY() {
+		return secondY;
+	}
+
+	~Quartet() {}
+
+private:
+	int firstX; // x coordinates of the first site
+	int firstY;
+	int secondX;
+	int secondY;
+};
+
+
 // two-dimensional array of Pairs
 class PairMatrix {
 public:
@@ -120,6 +160,77 @@ private:
 	int cols;
 	Pair **p;
 };
+
+
+class QuartetMatrix {
+public:
+	// constructor
+	QuartetMatrix() {
+		p = NULL;
+		rows = 0;
+		cols = 0;
+	}
+
+	// constructor
+	QuartetMatrix(int rows_count, int cols_count) {
+		rows = rows_count;
+		cols = cols_count;
+		p = new Quartet*[rows];
+		for (int i=0; i<rows; ++i) {
+			p[i] = new Quartet[cols];
+		}
+	}
+
+	//assignment operator
+	QuartetMatrix& operator= (const QuartetMatrix& pm) {
+		// destroy the original one
+		if (p!=NULL) {
+			for (int i=0; i<rows; ++i) {
+				delete [] p[i];
+				p[i]= NULL;
+			}
+			delete [] p;
+			p = NULL;
+		}
+		// construct a new one
+		rows = pm.rows;
+		cols = pm.cols;
+		p = new Quartet*[rows];
+		for (int i=0; i<rows; ++i) {
+			p[i] = new Quartet[cols];
+		}
+		// assign the value of pm to p
+		for (int i=0; i<rows; ++i) {
+			for (int j=0; j<cols; ++j) {
+				p[i][j] = pm.p[i][j];
+			}
+		}
+		return *this;
+	}
+
+	// return the matrix element m(i,j)
+	Quartet& operator()(int i, int j) {
+		return p[i][j];
+	}
+
+	// destructor
+	~QuartetMatrix() {
+		if (p!=NULL) {
+			for (int i=0; i<rows; ++i) {
+				delete [] p[i];
+				p[i]= NULL;
+			}
+			delete [] p;
+			p = NULL;
+		}
+	}
+
+private:
+	int rows;
+	int cols;
+	Quartet **p;
+};
+
 
 
 class Neighbors {
@@ -217,6 +328,10 @@ typedef Eigen::VectorXd DVector;
 typedef Eigen::Triplet<std::complex<double> > triplet;
 typedef std::vector<triplet> TripletList;
 
+
+// use boost library
+#include "boost/multi_array.hpp"
+typedef boost::multi_array<int, 4> Array4D;
 
 
 #endif /* TYPES_H_ */

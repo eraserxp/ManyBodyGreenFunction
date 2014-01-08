@@ -114,6 +114,9 @@ int coordinatesToIndex(int xmax, int ymax, int xi, int yi) {
 // obtain the neighbors of the state (xi, yi, xj, yj) ---> two sites indexI and indexJ
 // to avoid double counting, we only use the lattice state (indexI, indexJ)
 // where indexI < indexJ
+/*
+ * note the neighbors of (indexI, indexJ) should also satisfy the first index < the second index
+ */
 Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ymax) {
 	 Neighbors2D ns;
 	 int indexI = coordinatesToIndex(xmax,ymax, xi, yi);
@@ -164,3 +167,21 @@ Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ym
 
 	 return ns;
  }
+
+
+
+// generate an index matrix Index[xi][yi][xj][yj] = nth which represents
+//the Green's function G(xi, yi, xj, yj) is the nth item in vector V_{xi+yi+xj+yj}
+// we have restricted the index for site(xi, yi) must be small than that of (xj, yj)
+// DimsOfV: record the dimension of each V_K
+// VtoG maps from (xi+yi+xj+yj, nth) to (xi, yi, xj, yj)
+void generateIndexMatrix(int xmax, int ymax, Array4D& Index, QuartetMatrix& VtoG,
+		std::vector<int>& DimsOfV) {
+	Index = Array4D(boost::extents[xmax+1][ymax+1][xmax+1][ymax+1]);
+	VtoG = QuartetMatrix(xmax+xmax+ymax+ymax, nmax+1);//? waste a lot of memory
+	DimsOfV.resize(xmax+xmax+ymax+ymax);
+	// set all dimension to be zero initially
+	for (int i=0; i<DimsOfV.size(); ++i) {
+		DimsOfV[i] = 0;
+	}
+}

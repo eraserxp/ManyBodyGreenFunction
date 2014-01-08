@@ -234,9 +234,8 @@ int main(int argc, char **argv){
 //	Eigen::initParallel(); //use multi-threading with eigen c++
 
 //	someTest();
-//	comparedWithMathematicaResult();
 
-	checkSparseness();
+//	checkSparseness();
 
 	::testing::InitGoogleTest(&argc, argv);
 	int i= RUN_ALL_TESTS();

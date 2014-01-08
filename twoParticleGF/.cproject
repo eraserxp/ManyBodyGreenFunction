@@ -22,6 +22,7 @@
 								<option id="intel.compilestep.preprocessor.includedirectories.135570594" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/include"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/eigen"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/boost/include"/>
 								</option>
 								<inputType id="intel.cpp.compilestep.input.720384661" superClass="intel.cpp.compilestep.input"/>
 							</tool>
@@ -40,6 +41,7 @@
 								</option>
 								<option id="intel.linkstep.libpath.574581772" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/boost/lib"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 								</option>
 								<inputType id="intel.linkstep.input.36823927" superClass="intel.linkstep.input">
