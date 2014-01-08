@@ -28,7 +28,7 @@ double Hamiltonian2D::energyAtSite(int nx, int ny) {
 	return e0 + rnm_e0(nx,ny)*e0MaxDisorder;
 }
 
-// hopping interaction
+// hopping interaction in 4 different direction
 double Hamiltonian2D::t(int nx, int ny, char direction) {
 	double random = 0.0;
     switch ( direction ) {
@@ -212,3 +212,157 @@ void generateIndexMatrix2D(int xmax, int ymax, IntegerMatrix& Index, QuartetList
 	}
 
 }
+
+
+
+
+AlphaBeta2D::AlphaBeta2D(Parameters2D& ps):ham(ps) {
+	xmax = ps.xmax;
+	ymax = ps.ymax;
+	e0 = ps.e0;
+	t0 = ps.t0;
+	d0 = ps.d0;
+	e0MaxDisorder = ps.e0MaxDisorder;
+	t0MaxDisorder = ps.t0MaxDisorder;
+	d0MaxDisorder = ps.d0MaxDisorder;
+	e0seed = ps.e0seed;
+	t0seed = ps.t0seed;
+	d0seed = ps.d0seed;
+	generateIndexMatrix2D(xmax, ymax, Index, VtoG, DimsOfV);
+}
+
+void AlphaBeta2D::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta) {
+	int rows = DimsOfV[nsum];
+	int cols = (nsum-1<0)? 0:DimsOfV[nsum-1];
+	int cols2 = (nsum+1<2*nmax)? DimsOfV[nsum+1]:0;
+
+	alpha = ComplexMatrix(rows,cols,true); // alpha is initialized to 0 initially
+	beta = ComplexMatrix(rows,cols2,true);
+
+	// fill in the matrix row by row
+	#pragma omp parallel for
+	for (QuartetList::iterator it=VtoG[nsum].begin(); it!=VtoG[nsum].end(); ++it) {
+		//Pair p = VtoG(nsum, ith); // obtain g(xi,yi,xj,yj) which is ith item in V_nsum
+		Quartet p = *it; // retrieve the coordinates (xi,yi,xj,yj) from the vector V_nsum
+		int x1 = p.FirstX(); // coordinates for the first particle
+		int y1 = p.FirstY();
+		int x2 = p.SecondX(); // coordinates for the second particle
+		int y2 = p.SecondY();
+		int index1 = coordinatesToIndex(xmax,ymax,x1,y1);
+		int index2 = coordinatesToIndex(xmax,ymax,x2,y2);
+		int ith = Index(index1,index2);
+		complex_mkl denominator = { z.real -ham.energyAtSite(x1, y1)-
+				                       ham.energyAtSite(x2, y2)-
+				                   // first particle is the left nearest neighbor of the second
+				                   delta(y1-y2,0)*delta(x2-x1,1)*ham.d(x2, y2, 'L') -
+				                   // first particle is the down nearest neighbor of the second
+				                   delta(x1-x2,0)*delta(y2-y1,1)*ham.d(x2, y2, 'D'),
+				                       z.imag };
+		double denominatorSquared = denominator.real*denominator.real +
+				                    denominator.imag*denominator.imag;
+		// generate all the neighbors for the two sites index1 and index2
+		Neighbors2D ns = generateNeighbors2D(x1, y1, x2, y2, xmax, ymax);
+
+		// consider the four possible neighbors of particle 1
+		if (ns.firstLeft!=-1) { // the first particle has left neighbor
+			// index for the left neighbor of particle 1
+			int index1_left = coordinatesToIndex(xmax,ymax,x1-1,y1);
+			int jth = Index(index1_left,index2);
+			double t = ham.t(x1, y1, 'L');
+			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
+			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+		}
+
+		if (ns.firstRight!=-1) { // the first particle has right neighbor
+			// index for the right neighbor of particle 1
+			int index1_right = coordinatesToIndex(xmax,ymax,x1+1,y1);
+			int jth = Index(index1_right,index2);
+			double t = ham.t(x1, y1, 'R');
+			beta(ith,jth).real = t*denominator.real/denominatorSquared;
+			beta(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+
+		}
+
+		if (ns.firstUp!=-1) { // the first particle has up neighbor
+			// index for the up neighbor of particle 1
+			int index1_up = coordinatesToIndex(xmax,ymax,x1,y1+1);
+			int jth = Index(index1_up,index2);
+			double t = ham.t(x1, y1, 'U');
+			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
+			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+		}
+
+		if (ns.firstDown!=-1) { // the first particle has down neighbor
+			// index for the up neighbor of particle 1
+			int index1_down = coordinatesToIndex(xmax,ymax,x1,y1-1);
+			int jth = Index(index1_down,index2);
+			double t = ham.t(x1, y1, 'D');
+			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
+			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+		}
+
+
+		// consider the four possible neighbors of particle 2
+		if (ns.secondLeft!=-1) { // the second particle has left neighbor
+			// index for the left neighbor of particle 2
+			int index2_left = coordinatesToIndex(xmax,ymax,x2-1,y2);
+			int jth = Index(index1,index2_left);
+			double t = ham.t(x2, y2, 'L');
+			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
+			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+		}
+
+		if (ns.secondRight!=-1) { // the second particle has right neighbor
+			// index for the right neighbor of particle 2
+			int index2_right = coordinatesToIndex(xmax,ymax,x2+1,y2);
+			int jth = Index(index1,index2_right);
+			double t = ham.t(x2, y2, 'R');
+			beta(ith,jth).real = t*denominator.real/denominatorSquared;
+			beta(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+
+		}
+
+		if (ns.secondUp!=-1) { // the second particle has up neighbor
+			// index for the up neighbor of particle 2
+			int index2_up = coordinatesToIndex(xmax,ymax,x2,y2+1);
+			int jth = Index(index1,index2_up);
+			double t = ham.t(x2, y2, 'U');
+			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
+			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+		}
+
+		if (ns.secondDown!=-1) { // the second particle has down neighbor
+			// index for the up neighbor of particle 2
+			int index2_down = coordinatesToIndex(xmax,ymax,x2,y2-1);
+			int jth = Index(index1,index2_down);
+			double t = ham.t(x2, y2, 'D');
+			alpha(ith,jth).real = t*denominator.real/denominatorSquared;
+			alpha(ith,jth).imag = -t*denominator.imag/denominatorSquared;
+		}
+
+
+	}
+}
+
+
+
+
+
+int AlphaBeta2D::GetXmax() {
+	return xmax;
+}
+
+int AlphaBeta2D::GetYmax() {
+	return ymax;
+}
+
+// obtain the factor in front of G(x1i, y1i, x2i, y2i) in the equations for Green's functions
+complex_mkl AlphaBeta2D::GetFactor(int x1_i, int y1_i, int x2_i, int y2_i, complex_mkl z) {
+	 return {z.real - ham.energyAtSite(x1_i, y1_i)- ham.energyAtSite(x2_i, y2_i)-
+		 // first particle is the left nearest neighbor of the second
+		 	delta(y1_i - y2_i, 0)*delta(x2_i - x1_i, 1)*ham.d(x2_i, y2_i, 'L') -
+		 // first particle is the down nearest neighbor of the second
+		 	delta(x1_i - x2_i, 0)*delta(y2_i - y1_i, 1)*ham.d(x2_i, y2_i, 'D'),
+				             z.imag};
+}
+

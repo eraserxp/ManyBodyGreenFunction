@@ -202,22 +202,22 @@ public:
 	Neighbors2D() {
 		firstLeft = -1; // the left neighbor of the first particle, -1 means that the left neighbor doesn't exist
 		firstRight = -1;
-		firstTop = -1;
-		firstBottom = -1;
+		firstUp = -1;
+		firstDown = -1;
 		secondLeft = -1; //the left neighbor of the second particle, -1 means that the left neighbor doesn't exist
 		secondRight = -1;
-		secondTop = -1;
-		secondBottom = -1;
+		secondUp = -1;
+		secondDown = -1;
 	}
 
 	int firstLeft;
 	int firstRight;
-	int firstTop;
-	int firstBottom;
+	int firstUp;
+	int firstDown;
 	int secondLeft;
 	int secondRight;
-	int secondTop;
-	int secondBottom;
+	int secondUp;
+	int secondDown;
 };
 
 

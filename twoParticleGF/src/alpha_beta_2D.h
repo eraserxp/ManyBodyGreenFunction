@@ -52,4 +52,26 @@ Neighbors2D generateNeighbors2D(int xi, int yi, int xj, int yj, int xmax, int ym
 void generateIndexMatrix2D(int xmax, int ymax, IntegerMatrix& Index, QuartetListVector& VtoG,
 		std::vector<int>& DimsOfV);
 
+class AlphaBeta2D {
+public:
+	AlphaBeta2D(Parameters2D& ps);
+	void FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta);
+	int GetXmax();
+	int GetYmax();
+	// obtain the factor in front of G(ni1, ni2) in the equations for Green's functions
+	complex_mkl GetFactor(int ni1, int ni2, complex_mkl z);
+
+private:
+	int xmax;
+	int ymax;
+	double e0, t0, d0;
+	double e0MaxDisorder, t0MaxDisorder, d0MaxDisorder;
+	unsigned e0seed, t0seed, d0seed;
+	Hamiltonian2D ham;
+	IntegerMatrix Index;
+	QuartetListVector VtoG;
+	std::vector<int> DimsOfV;
+};
+
+
 #endif
