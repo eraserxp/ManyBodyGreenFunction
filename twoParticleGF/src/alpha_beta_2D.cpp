@@ -8,8 +8,8 @@
 #include "alpha_beta_2D.h"
 
 
-Hamiltonian2D::Hamiltonian2D(Parameters2D& p):rnm_e0(p.xmax,p.ymax,p.e0seed),
-rnm_t0(p.xmax,p.ymax,p.t0seed), rnm_d0(p.xmax,p.ymax,p.d0seed){
+Hamiltonian2D::Hamiltonian2D(Parameters2D& p):rnm_e0(p.xmax+1,p.ymax+1,p.e0seed),
+rnm_t0(p.xmax+1,p.ymax+1,p.t0seed), rnm_d0(p.xmax+1,p.ymax+1,p.d0seed){
 	xmax = p.xmax;
 	ymax = p.ymax;
 	e0 = p.e0;
@@ -71,7 +71,7 @@ double Hamiltonian2D::d(int nx, int ny, char direction) {
           printf("Illegal direction!");
     }
 
-	return t0 + random*d0MaxDisorder;
+	return d0 + random*d0MaxDisorder;
 }
 
 // in 2D, we index the lattice sites in the following way

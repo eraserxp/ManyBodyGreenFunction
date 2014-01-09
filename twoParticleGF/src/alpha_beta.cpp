@@ -10,8 +10,8 @@ dcomplex convertToDcomplex(complex_mkl& mkl_complex) {
 	return dcomplex(mkl_complex.real, mkl_complex.imag);
 }
 
-Hamiltonian::Hamiltonian(Parameters& p):rnm_e0(p.nmax,1,p.e0seed), rnm_t0(p.nmax,p.nmax,p.t0seed),
-rnm_d0(p.nmax,p.nmax,p.d0seed){
+Hamiltonian::Hamiltonian(Parameters& p):rnm_e0(p.nmax+1,1,p.e0seed), rnm_t0(p.nmax+1,p.nmax+1,p.t0seed),
+rnm_d0(p.nmax+1,p.nmax+1,p.d0seed){
 	nmax = p.nmax;
 	e0 = p.e0;
 	t0 = p.t0;
@@ -52,7 +52,7 @@ void generateIndexMatrix(int nmax, IntegerMatrix& Index, PairMatrix& VtoG, std::
 	int nsite = nmax + 1; //total number of sites
 	Index = IntegerMatrix(nsite, nsite);
 	VtoG = PairMatrix(nmax+nmax, nmax+1);
-	DimsOfV.resize(nmax+nmax);
+	DimsOfV.resize(nmax+nmax); //nsum can be as large as nmax+nmax-1
 	// set all dimension to be zero initially
 	for (int i=0; i<DimsOfV.size(); ++i) {
 		DimsOfV[i] = 0;

@@ -116,8 +116,8 @@ TEST(GenerateNeighbors2DTest, ThreeByThreeCrystal) {
 
 TEST(SolveVnc2DTest, Small) {
 	Parameters2D pars;
-	pars.xmax = 30;
-	pars.ymax = 30;
+	pars.xmax = 15;
+	pars.ymax = 15;
 	pars.e0 = 0.0;
 	pars.t0 = 1.0;
 	pars.d0 = 1.0;
@@ -130,7 +130,7 @@ TEST(SolveVnc2DTest, Small) {
 	AlphaBeta2D ab(pars);
 	complex_mkl z = {1.0, 0.1};
 	ComplexMatrix Vnc;
-	for (int i=0; i<3; ++i) {
+	for (int i=0; i<1; ++i) {
 		z.real = -6 + 1.2*i;
 		z.imag = 0.1;
 		Vnc = solveVnc2D(x1_i, y1_i, x2_i, y2_i, z, ab);
@@ -143,11 +143,11 @@ TEST(SolveVnc2DTest, Small) {
 
 TEST(GenerateDensityOfState2D, SmallCrystal) {
 	Parameters2D pars;
-	pars.xmax = 30;
-	pars.ymax = 30;
+	pars.xmax = 10;
+	pars.ymax = 10;
 	pars.e0 = 0.0;
-	pars.t0 = 5.0;
-	pars.d0 = 15.0;
+	pars.t0 = 1.0;
+	pars.d0 = 0.0;
 	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 	int x1_i = pars.xmax/2-1;
