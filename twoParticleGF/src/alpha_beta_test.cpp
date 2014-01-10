@@ -8,6 +8,7 @@
 #include "alpha_beta.h"
 #include "gtest/gtest.h"
 #include "mics.h"
+#include "integration.h"
 
 TEST(GenerateNeighborsTest, NoNeighbors) {
 	Neighbors ns = generateNeighbors(0,1,1);
@@ -490,3 +491,21 @@ TEST(GenerateDensityOfStateSP, comparedWithMathematicaResult) {
 //	}
 	EXPECT_EQ(2,2);
 }
+
+
+TEST(DensityOfStateTest, IntegralShouldBeOne) {
+	Parameters pars;
+	pars.nmax = 201;
+	pars.e0 = 0.0;
+	pars.t0 = 5.0;
+	pars.d0 = 15.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 2.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+	double x_min = -50;
+	double x_max = 50;
+
+	double integral = integrate(&func_test,&pars,x_min,x_max, 1.e-3, 1.e-3);
+	EXPECT_NEAR(integral, 0.0, 1.e-2);
+}
+
+

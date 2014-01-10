@@ -23,6 +23,7 @@
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/include"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/eigen"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/boost/include"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/gsl_icc/include"/>
 								</option>
 								<inputType id="intel.cpp.compilestep.input.720384661" superClass="intel.cpp.compilestep.input"/>
 							</tool>
@@ -35,15 +36,19 @@
 							<tool id="intel.c.linkstep.linux.x86_64.exe.rel.323948756_12.0.0" name="Intel Intel(R) 64 C Linker" superClass="intel.c.linkstep.linux.x86_64.exe.rel_12.0.0"/>
 							<tool command="icc -O3  -openmp -mkl=parallel -wd279 -Wall -std=c++0x -isystem  -DNDEBUG" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.ICCErrorParser" id="intel.cpp.linkstep.linux.x86_64.exe.rel.87426667_12.0.0" name="Intel Intel(R) 64 C++ Linker" superClass="intel.cpp.linkstep.linux.x86_64.exe.rel_12.0.0">
 								<option id="intel.linkstep.libname.1918700884" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs">
+									<listOptionValue builtIn="false" value="imf"/>
 									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="gsl"/>
 									<listOptionValue builtIn="false" value="gtest"/>
 									<listOptionValue builtIn="false" value="pthread"/>
 								</option>
 								<option id="intel.linkstep.libpath.574581772" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/gsl_icc/lib"/>
 									<listOptionValue builtIn="false" value="/home/pxiang/boost/lib"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 								</option>
+								<option id="intel.linkstep.loptions.924854113" name="Additional Options" superClass="intel.linkstep.loptions" value="-Wl,-rpath,/home/pxiang/gsl_icc/lib" valueType="string"/>
 								<inputType id="intel.linkstep.input.36823927" superClass="intel.linkstep.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

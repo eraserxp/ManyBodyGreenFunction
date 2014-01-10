@@ -632,7 +632,7 @@ CSMatrix fromRightToCenterSP(int Kc, dcomplex z, AlphaBetaSP& ab) {
 		tmp = betan*AnPlusOne;
 		changeElements(tmp);
 		// when the sparsity of alphan and beta is about 1%, switch to the sparse solver
-		if (sparsity < 0.005) {
+		if (sparsity < 0.01) {
 			AnPlusOne = solveSparseLinearEqs(tmp, alphan);
 		} else { //use the dense solver
 			AnPlusOne = solveDenseLinearEqs(tmp, alphan);
@@ -661,7 +661,7 @@ void checkSparsenessRightToCenter(int Kc, dcomplex z, AlphaBetaSP& ab) {
 		tmp = betan*AnPlusOne;
 		changeElements(tmp);
 		// when the sparsity of alphan and beta is about 1%, switch to the sparse solver
-		if (sparsity < 0.001) {
+		if (sparsity < 0.01) {
 			AnPlusOne = solveSparseLinearEqs(tmp, alphan);
 		} else { //use the dense solver
 			AnPlusOne = solveDenseLinearEqs(tmp, alphan);
@@ -690,7 +690,7 @@ CSMatrix fromLeftToCenterSP(int Kc, dcomplex z, AlphaBetaSP& ab) {
 		tmp = alphan*AnMinusOneTilde;
 		changeElements(tmp);
 
-		if (sparsity < 0.005) {
+		if (sparsity < 0.01) {
 			AnMinusOneTilde = solveSparseLinearEqs(tmp, betan);
 		} else { //use the dense solver
 			AnMinusOneTilde = solveDenseLinearEqs(tmp, betan);
@@ -718,7 +718,7 @@ void checkSparsenessLeftToCenter(int Kc, dcomplex z, AlphaBetaSP& ab) {
 		tmp = alphan*AnMinusOneTilde;
 		changeElements(tmp);
 
-		if (sparsity < 0.001) {
+		if (sparsity < 0.01) {
 			AnMinusOneTilde = solveSparseLinearEqs(tmp, betan);
 		} else { //use the dense solver
 			AnMinusOneTilde = solveDenseLinearEqs(tmp, betan);
@@ -734,7 +734,7 @@ void checkSparsenessLeftToCenter(int Kc, dcomplex z, AlphaBetaSP& ab) {
 
 void checkSparseness() {
 	Parameters pars;
-	pars.nmax = 5001;
+	pars.nmax = 501;
 	pars.e0 = 0.0;
 	pars.t0 = 5.0;
 	pars.d0 = 15.0;
@@ -806,3 +806,23 @@ void generateDensityOfStateSP(int ni1, int ni2, Parameters& pars, const std::vec
 }
 
 
+// calculate the density of state for a given real energy
+double dos(double E, void* pars) {
+	complex_mkl z;
+	z.real = E;
+	z.imag = 0.1;
+	Parameters * parameters = (Parameters *) pars;
+	ComplexMatrix Vnc;
+	AlphaBeta ab(*parameters);
+
+	int ni1 = parameters->nmax/2;
+	int ni2 = ni1 + 1;
+	Vnc = solveVnc(ni1,ni2,z,ab);
+	int nth = getIndex(parameters->nmax, ni1+ni2, ni1, ni2);
+	return -Vnc(nth,0).imag/M_PI;
+}
+
+double func_test(double E, void* pars) {
+
+	return sin(E);
+}

@@ -147,7 +147,7 @@ TEST(GenerateDensityOfState2D, SmallCrystal) {
 	pars.ymax = 10;
 	pars.e0 = 0.0;
 	pars.t0 = 1.0;
-	pars.d0 = 0.0;
+	pars.d0 = 5.0;
 	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 	int x1_i = pars.xmax/2-1;

@@ -153,4 +153,8 @@ CDVector solveVncSP(int ni1, int ni2, dcomplex z, AlphaBetaSP& ab);
 //
 void generateDensityOfStateSP(int ni1, int ni2, Parameters& pars, const std::vector<dcomplex>& zList, std::vector<double>& rhoList);
 
+double dos(double E, void* pars);
+
+double func_test(double E, void* pars);
+
 #endif /* GENERATE_ALPHA_BETA_H_ */
