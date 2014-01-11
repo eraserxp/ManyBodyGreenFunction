@@ -441,17 +441,17 @@ TEST(GenerateDensityOfState, comparedWithMathematicaResult) {
 	Parameters pars;
 	pars.nmax = 101;
 	pars.e0 = 0.0;
-	pars.t0 = 5.0;
-	pars.d0 = 15.0;
-	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 2.0;
+	pars.t0 = 1.0;
+	pars.d0 = 10.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 	int ni1 = pars.nmax/2;
 	int ni2 = ni1 + 1;
 	std::vector<complex_mkl> zList(101);
-	std::vector<double> zRealList(101);
+	std::vector<double> zRealList = linspace(-50,50,101);
 	for (int i=0; i<zList.size(); ++i) {
-		zRealList[i]=-50 + i;
-		zList[i].real = -50 + i;
+		//zRealList[i]=-50 + i;
+		zList[i].real = zRealList[i];
 		zList[i].imag = 0.1;
 	}
 	std::vector<double> rhoList;

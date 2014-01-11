@@ -173,6 +173,7 @@ private:
 };
 
 typedef std::list<Quartet> QuartetList;
+typedef std::vector< Pair > PairVector;
 
 // we use the linked-list to save memory
 // each item of the vector is a list of quartet which is expandable
@@ -288,6 +289,10 @@ typedef Eigen::SparseMatrix<std::complex<double> > CSMatrix;
 
 typedef Eigen::MatrixXcd CDMatrix;
 
+typedef Eigen::MatrixXd DMatrix;
+
+typedef Eigen::MatrixXi IMatrix; // integer matrix
+
 typedef Eigen::SparseVector< std::complex<double> > CSVector;
 
 typedef Eigen::VectorXcd CDVector;
@@ -299,8 +304,8 @@ typedef std::vector<triplet> TripletList;
 
 
 // use boost library
-#include "boost/multi_array.hpp"
-typedef boost::multi_array<int, 4> Array4D;
+//#include "boost/multi_array.hpp"
+//typedef boost::multi_array<int, 4> Array4D;
 
 
 #endif /* TYPES_H_ */
