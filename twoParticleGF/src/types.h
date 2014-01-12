@@ -291,11 +291,15 @@ typedef Eigen::MatrixXcd CDMatrix;
 
 typedef Eigen::MatrixXd DMatrix;
 
+typedef Eigen::ArrayXd DArray;
+
 typedef Eigen::MatrixXi IMatrix; // integer matrix
 
 typedef Eigen::SparseVector< std::complex<double> > CSVector;
 
 typedef Eigen::VectorXcd CDVector;
+
+typedef Eigen::ArrayXcd CDArray;
 
 typedef Eigen::VectorXd DVector;
 

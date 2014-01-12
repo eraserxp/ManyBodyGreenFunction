@@ -93,11 +93,69 @@ void formHamiltonianMatrix(InputParameters& pars, DMatrix& hamiltonian, IMatrix&
 
 
 void obtainEigenVectors(DMatrix& hamiltonian, DVector& eigenValues, DMatrix& eigenVectors) {
-	Eigen::SelfAdjointEigenSolver<Matrix2f> eigensolver(hamiltonian);
+	Eigen::SelfAdjointEigenSolver<DMatrix> eigensolver(hamiltonian);
 	if (eigensolver.info() == Eigen::Success) {
 		eigenValues = eigensolver.eigenvalues();
 		eigenVectors = eigensolver.eigenvectors();
 	} else {
 		printf("Failed to solve the eigen problem!");
 	}
+}
+
+
+//helper functions for calculating the green function G(n1f, n2f, n1i, n2i, z)
+void numeratorHelper(int n1f, int n2f, int n1i, int n2i, IMatrix& indexMatrix,
+		             DMatrix& eigenVectors, CDArray& numerator) {
+	int bra_index = indexMatrix(n1f, n2f);
+	int ket_index = indexMatrix(n1i, n2i);
+	DVector wavefunc_f = eigenVectors.row(bra_index);
+	DVector wavefunc_i = eigenVectors.row(ket_index);
+	DArray tmp = wavefunc_f.array()*wavefunc_i.array();
+	numerator = tmp.cast< dcomplex >();
+}
+
+void denominatorHelper(dcomplex z, DVector& eigenValues, CDArray& oneOverDenominator) {
+	int n = eigenValues.rows();
+	oneOverDenominator = CDArray(n);
+	for (int i=0; i<n; ++i) {
+		oneOverDenominator(i) = 1.0/(z - eigenValues(i));
+	}
+
+}
+
+dcomplex greenFunc(CDArray& numerator, CDArray& oneOverDenominator) {
+	CDArray tmp = numerator*oneOverDenominator;
+	return tmp.sum();
+}
+
+
+// calculate the density of state at (ni1, ni2)
+void densityOfState_direct(InputParameters& pars, int n1i, int n2i, std::vector<dcomplex >& zList,
+		                   std::vector<double>& dosList) {
+	int nmax = pars.nmax;
+	IMatrix indexMatrix;
+	PairVector basisSets;
+	formBasisSets(nmax, indexMatrix, basisSets);
+
+	DMatrix hamiltonian;
+	formHamiltonianMatrix(pars, hamiltonian, indexMatrix, basisSets);
+
+	DVector eigenValues;
+	DMatrix eigenVectors;
+	obtainEigenVectors(hamiltonian, eigenValues, eigenVectors);
+
+	int n1f = n1i;
+	int n2f = n2i;
+	CDArray numerator;
+	numeratorHelper(n1f, n2f, n1i, n2i, indexMatrix, eigenVectors, numerator);
+
+	dosList.clear();
+	for (int i=0; i<zList.size(); ++i) {
+		dcomplex z = zList[i];
+		CDArray oneOverDenominator;
+		denominatorHelper(z, eigenValues, oneOverDenominator);
+		dcomplex gf = greenFunc(numerator, oneOverDenominator);
+		dosList[i] = -gf.imag()/M_PI;
+	}
+
 }
