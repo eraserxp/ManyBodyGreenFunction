@@ -150,6 +150,7 @@ void densityOfState_direct(InputParameters& pars, int n1i, int n2i, std::vector<
 	numeratorHelper(n1f, n2f, n1i, n2i, indexMatrix, eigenVectors, numerator);
 
 	dosList.clear();
+	dosList.reserve(zList.size());
 	for (int i=0; i<zList.size(); ++i) {
 		dcomplex z = zList[i];
 		CDArray oneOverDenominator;

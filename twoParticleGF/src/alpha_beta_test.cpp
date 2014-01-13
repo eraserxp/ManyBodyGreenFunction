@@ -439,10 +439,10 @@ TEST(SolveVncSPTest, DISABLED_OneThousandSites) {
 
 TEST(GenerateDensityOfState, comparedWithMathematicaResult) {
 	Parameters pars;
-	pars.nmax = 101;
+	pars.nmax = 100;
 	pars.e0 = 0.0;
-	pars.t0 = 1.0;
-	pars.d0 = 10.0;
+	pars.t0 = 5.0;
+	pars.d0 = 15.0;
 	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 	int ni1 = pars.nmax/2;
