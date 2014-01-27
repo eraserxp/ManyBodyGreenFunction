@@ -17,6 +17,8 @@
 
 #include "mkl.h"
 
+
+
 typedef std::complex<double> dcomplex;
 
 //user-defined mkl complex type
@@ -280,7 +282,7 @@ typedef struct {
 
 
 // use eigen c++ library
-//#define EIGEN_USE_MKL_ALL
+#define EIGEN_USE_MKL_ALL
 #include <Eigen/PardisoSupport> // use intel sparse solver
 #include <Eigen/Dense>
 #include <Eigen/Sparse>

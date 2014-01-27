@@ -6,6 +6,7 @@
  */
 
 #include "alpha_beta.h"
+#include "alpha_beta_sparse.h"
 #include "gtest/gtest.h"
 #include "mics.h"
 #include "integration.h"

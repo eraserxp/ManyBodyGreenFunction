@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "mics.h"
 
-TEST(DirectCalculationTest, DOS) {
+TEST(DirectCalculationTest, CheckDOS) {
 	InputParameters pars;
 	pars.nmax = 100;
 	pars.t0 = 5.0;
@@ -21,9 +21,11 @@ TEST(DirectCalculationTest, DOS) {
 	int n2i = n1i + 1;
 	std::vector<dcomplex > zList(101);
 	std::vector<double> zRealList = linspace(-50,50,101);
+
 	for (int i=0; i<zList.size(); ++i) {
 		zList[i] =dcomplex( zRealList[i], 0.1);
 	}
+
 	std::vector<double> rhoList;
 	densityOfState_direct(pars, n1i, n2i, zList, rhoList);
 	save_two_arrays("rho_vs_energy_direct.txt", zRealList, rhoList);

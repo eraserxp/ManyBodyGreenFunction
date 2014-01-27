@@ -12,6 +12,7 @@
 
 #include "random_generator.h"
 #include "alpha_beta.h"
+#include "alpha_beta_sparse.h"
 #include "matrix.h"
 #include "complex_matrix.h"
 #include "integer_matrix.h"
