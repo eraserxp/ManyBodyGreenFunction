@@ -86,27 +86,6 @@ int getIndex(int nmax, int nsum, int ni, int nj);
 void generateDensityOfState(int ni1, int ni2, Parameters& pars, const std::vector<complex_mkl>& zList, std::vector<double>& rhoList);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 double dos(double E, void* pars);
 
 double func_test(double E, void* pars);
