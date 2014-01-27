@@ -10,7 +10,7 @@
 #include "mics.h"
 
 
-TEST(AlphaBetaSPTest, FourSitesNoDisorder) {
+TEST(AlphaBetaSPTest, DISABLED_FourSitesNoDisorder) {
 	Parameters pars;
 	pars.nmax = 3;
 	pars.e0 = pars.t0 = pars.d0 = 1;
@@ -144,7 +144,7 @@ TEST(SolveVncSPTest, DISABLED_TwoHundredSites) {
 }
 
 
-TEST(GenerateDensityOfStateSP, comparedWithMathematicaResult) {
+TEST(GenerateDensityOfStateSP, DISABLED_comparedWithMathematicaResult) {
 	Parameters pars;
 	pars.nmax = 101;
 	pars.e0 = 0.0;

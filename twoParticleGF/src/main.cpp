@@ -266,7 +266,7 @@ int main(int argc, char **argv){
 
 //	someTest();
 
-	checkSparseness();
+//	checkSparseness();
 //	test_2d();
 
 	::testing::InitGoogleTest(&argc, argv);
