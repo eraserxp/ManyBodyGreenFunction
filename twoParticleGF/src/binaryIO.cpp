@@ -5,6 +5,7 @@
  *      Author: pxiang
  */
 #include "binaryIO.h"
+#include "types.h"
 
 // write the content of a ComplexMatrix into a binary file
 // store the rows_count and column_count first
@@ -44,4 +45,33 @@ int bytesToComplexMatrix(ComplexMatrix& cm, std::string filename) {
 	cm = ComplexMatrix(p, rows, cols);
 	delete [] p;
 	return 0;
+}
+
+
+// save an eigen matrix into a binary file
+template<typename MatrixType>
+void save(std::string filename, const MatrixType& m)
+{
+ofstream f(filename.c_str(), ios::binary);
+// write the row_count and col_count into the file
+f.write((char *)&m.rows(), sizeof(m.rows()));
+f.write((char *)&m.cols(), sizeof(m.cols()));
+// write the matrix elements into the file
+f.write((char *)&m.data(), sizeof(typename MatrixType::Scalar)*m.cols()*m.cols());
+f.close();
+}
+
+// load an eigen matrix from a binary file
+template<typename MatrixType>
+void load(std::string filename, MatrixType& m)
+{
+typename MatrixType::Index rows, cols;
+ifstream f(filename.c_str(), ios::binary);
+f.read((char *)&rows, sizeof(rows));
+f.read((char *)&cols, sizeof(cols));
+m.resize(rows, cols);
+f.read((char *)&m.data(), sizeof(typename MatrixType::Scalar)*rows*cols);
+if (f.bad())
+throw std::exception("Error reading matrix");
+f.close();
 }

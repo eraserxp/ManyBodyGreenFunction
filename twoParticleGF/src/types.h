@@ -9,6 +9,7 @@
 #define TYPES_H_
 
 #include <math.h>
+#include <cmath>
 #define _USE_MATH_DEFINES
 
 #include<iostream>

@@ -14,6 +14,7 @@
 #include "integer_matrix.h"
 
 #include "random_generator.h"
+#include "binaryIO.h"
 
 
 #include <vector>
@@ -54,6 +55,7 @@ Neighbors generateNeighbors(int i, int j, int nmax);
 class AlphaBeta {
 public:
 	AlphaBeta(Parameters& ps);
+	void FillIndexMatrix(IntegerMatrix& im);
 	void FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta);
 	int GetNmax();
 	// obtain the factor in front of G(ni1, ni2) in the equations for Green's functions
@@ -72,11 +74,11 @@ private:
 
 void changeElements(ComplexMatrix& cm);
 
-ComplexMatrix fromRightToCenter(int Kc, complex_mkl z, AlphaBeta& ab);
-ComplexMatrix fromLeftToCenter(int Kc, complex_mkl z, AlphaBeta& ab);
+ComplexMatrix fromRightToCenter(int Kc, complex_mkl z, AlphaBeta& ab, bool saved=false);
+ComplexMatrix fromLeftToCenter(int Kc, complex_mkl z, AlphaBeta& ab, bool saved=false);
 
 
-ComplexMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab);
+ComplexMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab, bool saved=false);
 
 // given g(ni,nj), it tells the index of g(ni,nj) in vector V_{ni+nj}
 // if g(ni,nj) is not in V_{ni+nj}, it returns -1 which means not found
@@ -89,5 +91,9 @@ void generateDensityOfState(int ni1, int ni2, Parameters& pars, const std::vecto
 double dos(double E, void* pars);
 
 double func_test(double E, void* pars);
+
+void calculateAllGF(int ni1, int ni2, complex_mkl z, AlphaBeta& ab);
+
+complex_mkl extractMatrixElement(int n, int m, int ni1, int ni2, IntegerMatrix& indexMatrix);
 
 #endif /* GENERATE_ALPHA_BETA_H_ */

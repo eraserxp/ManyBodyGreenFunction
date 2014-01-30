@@ -132,6 +132,10 @@ AlphaBeta::AlphaBeta(Parameters& ps):ham(ps) {
 	generateIndexMatrix(nmax, Index, VtoG, DimsOfV);
 }
 
+void AlphaBeta::FillIndexMatrix(IntegerMatrix& im) {
+	im = Index;
+}
+
 void AlphaBeta::FillAlphaBetaMatrix(int nsum, complex_mkl z, ComplexMatrix& alpha, ComplexMatrix& beta) {
 	int rows = DimsOfV[nsum];
 	int cols = (nsum-1<0)? 0:DimsOfV[nsum-1];
@@ -244,13 +248,21 @@ void changeElements(ComplexMatrix& cm) {
 //}
 
 
-ComplexMatrix fromRightToCenter(int Kc, complex_mkl z, AlphaBeta& ab) {
+ComplexMatrix fromRightToCenter(int Kc, complex_mkl z, AlphaBeta& ab, bool saved) {
 	int nmax = ab.GetNmax();
 	int K = nmax + nmax-1;
 	ComplexMatrix alphan;
 	ComplexMatrix betan;
 	ab.FillAlphaBetaMatrix(K,z,alphan, betan);
 	ComplexMatrix AnPlusOne = alphan;
+
+	// save the A matrix into a binary file
+	std::string filename;
+	if (saved==true) {
+		filename="A"+ itos(K) + ".bin";
+		complexMatrixToBytes(AnPlusOne,filename);
+	}
+
 	ComplexMatrix tmp1;
 
 	for (int n=K-1; n>=Kc+1; n--) {
@@ -259,6 +271,12 @@ ComplexMatrix fromRightToCenter(int Kc, complex_mkl z, AlphaBeta& ab) {
 		changeElements(tmp1);
 		solveLinearEqs(tmp1, alphan);
 		AnPlusOne = alphan;
+
+		// save the A matrix into a binary file
+		if (saved==true) {
+			filename="A"+ itos(n) + ".bin";
+			complexMatrixToBytes(AnPlusOne,filename);
+		}
 	}
 
 	return AnPlusOne;
@@ -290,13 +308,21 @@ ComplexMatrix fromRightToCenter(int Kc, complex_mkl z, AlphaBeta& ab) {
 //}
 
 
-ComplexMatrix fromLeftToCenter(int Kc, complex_mkl z, AlphaBeta& ab) {
+ComplexMatrix fromLeftToCenter(int Kc, complex_mkl z, AlphaBeta& ab, bool saved) {
 	int nmax = ab.GetNmax();
 	int K = 1;
 	ComplexMatrix alphan;
 	ComplexMatrix betan;
 	ab.FillAlphaBetaMatrix(K,z,alphan, betan);
 	ComplexMatrix AnMinusOneTilde = betan;
+
+	// save the ATilde matrix into a binary file
+	std::string filename;
+	if (saved==true) {
+		filename="ATilde"+ itos(K) + ".bin";
+		complexMatrixToBytes(AnMinusOneTilde,filename);
+	}
+
 	ComplexMatrix tmp1;
 
 	for (int n=K+1; n<=Kc-1; n++) {
@@ -305,15 +331,23 @@ ComplexMatrix fromLeftToCenter(int Kc, complex_mkl z, AlphaBeta& ab) {
 		changeElements(tmp1);
 		solveLinearEqs(tmp1, betan); //betan now contains the solution of AX = B
 		AnMinusOneTilde = betan;
+
+		// save the ATilde matrix into a binary file
+		if (saved==true) {
+			filename="ATilde"+ itos(n) + ".bin";
+			complexMatrixToBytes(AnMinusOneTilde,filename);
+		}
 	}
 
 	return AnMinusOneTilde;
 }
 
 
+
+
 //ComplexMatrix solveVnc(int ni1, int ni2, complex_double z, Parameters& pars) {
 //	AlphaBeta ab(pars);
-ComplexMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab) {
+ComplexMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab, bool saved) {
 	//	AlphaBeta ab(pars);
 	// to speed up, we can make ab static --- but it doesn't work
 	//static AlphaBeta ab(pars);
@@ -321,8 +355,8 @@ ComplexMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab) {
 	ComplexMatrix alphanc;
 	ComplexMatrix betanc;
 	ab.FillAlphaBetaMatrix(Kc,z,alphanc, betanc);
-	ComplexMatrix AncPlusOne = fromRightToCenter(Kc,z,ab);
-	ComplexMatrix AncMinusOneTilde = fromLeftToCenter(Kc,z,ab);
+	ComplexMatrix AncPlusOne = fromRightToCenter(Kc,z,ab, saved);
+	ComplexMatrix AncMinusOneTilde = fromLeftToCenter(Kc,z,ab, saved);
 	ComplexMatrix mat1 = alphanc*AncMinusOneTilde;
 	mat1.AddInPlace(betanc*AncPlusOne);
 	changeElements(mat1);
@@ -348,8 +382,6 @@ ComplexMatrix solveVnc(int ni1, int ni2, complex_mkl z, AlphaBeta& ab) {
 	double square = denominator.real*denominator.real + denominator.imag*denominator.imag;
 	constVector(m,0).real = denominator.real/square;
 	constVector(m,0).imag = -denominator.imag/square;
-
-
 
 	solveLinearEqs(mat1, constVector); // now constVector contains the solution
 	return constVector;
@@ -377,11 +409,51 @@ void generateDensityOfState(int ni1, int ni2, Parameters& pars, const std::vecto
 
 
 
+// calculate all the matrix elements of the Green function < i, j | G | m, n> where m and n are fixed
+void calculateAllGF(int ni1, int ni2, complex_mkl z, AlphaBeta& ab) {
+	int nc = ni1 + ni2;
+	std::string fileReadFrom, fileWriteTo;
+	ComplexMatrix V_K = solveVnc(ni1, ni2, z, ab, true);
+	fileWriteTo="V_"+ itos(nc) + ".bin";
+	complexMatrixToBytes(V_K,fileWriteTo);
+	ComplexMatrix A;
+	ComplexMatrix ATilde;
+	ComplexMatrix V_nc_save = V_K;
+
+	// calculate all V_K and save them into binary files
+	int nmax = ab.GetNmax();
+	// calculate V_K where nc+1 < K <= nmax+nmax-1;
+	for (int K=nc+1; K<=nmax+nmax-1; ++K) {
+		fileReadFrom="A"+ itos(K) + ".bin";
+		bytesToComplexMatrix(A,fileReadFrom);
+		V_K = A*V_K;
+		fileWriteTo="V_"+ itos(K) + ".bin";
+		complexMatrixToBytes(V_K,fileWriteTo);
+	}
+
+	// calculate V_K where 1 <= K <= nc-1;
+	V_K = V_nc_save; //restore the value of V_nc
+	for (int K=nc-1; K>=1; --K) {
+		fileReadFrom="ATilde"+ itos(K) + ".bin";
+		bytesToComplexMatrix(ATilde,fileReadFrom);
+		V_K = ATilde*V_K;
+		fileWriteTo="V_"+ itos(K) + ".bin";
+		complexMatrixToBytes(V_K,fileWriteTo);
+	}
+}
 
 
-
-
-
+// extract the matrix element G(n, m, ni1, ni2) from files stored in disk
+// it requires the index matrix which tells the order of G(n, m, ni1, ni2) in V_{n+m}
+complex_mkl extractMatrixElement(int n, int m, int ni1, int ni2, IntegerMatrix& indexMatrix) {
+	int nsum = n + m;
+	std::string filename;
+	filename = "V_" + itos(nsum) + ".bin";
+	ComplexMatrix V_nsum;
+	bytesToComplexMatrix(V_nsum, filename);
+	int nth = indexMatrix(n, m);
+	return V_nsum(nth, 0);
+}
 
 
 

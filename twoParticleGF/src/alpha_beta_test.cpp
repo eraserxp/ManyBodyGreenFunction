@@ -343,7 +343,7 @@ TEST(DensityOfStateTest, IntegralShouldBeOne) {
 	pars.e0 = 0.0;
 	pars.t0 = 5.0;
 	pars.d0 = 15.0;
-	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 2.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 	double x_min = -50;
 	double x_max = 50;
@@ -353,3 +353,57 @@ TEST(DensityOfStateTest, IntegralShouldBeOne) {
 }
 
 
+TEST(CalculateAllGF, checkIO) {
+	Parameters pars;
+	pars.nmax = 100;
+	pars.e0 = 0.0;
+	pars.t0 = 5.0;
+	pars.d0 = 15.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+	int ni1 = pars.nmax/2;
+	int ni2 = ni1 + 1;
+//	std::vector<complex_mkl> zList(101);
+//	std::vector<double> zRealList = linspace(-50,50,101);
+//	for (int i=0; i<zList.size(); ++i) {
+//		//zRealList[i]=-50 + i;
+//		zList[i].real = zRealList[i];
+//		zList[i].imag = 0.1;
+//	}
+//	std::vector<double> rhoList;
+//	generateDensityOfState(ni1, ni2, pars,zList,rhoList);
+//	save_two_arrays("rho_vs_energy.txt", zRealList, rhoList);
+
+	AlphaBeta ab(pars);
+	complex_mkl z;
+	z.real = 35.0;
+	z.imag = 0.1;
+	calculateAllGF(ni1, ni2, z, ab);
+
+	EXPECT_EQ(2,2);
+}
+
+
+TEST(ExtractMatrixElement, readFromFile) {
+	Parameters pars;
+	pars.nmax = 100;
+	pars.e0 = 0.0;
+	pars.t0 = 5.0;
+	pars.d0 = 15.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+	int ni1 = pars.nmax/2;
+	int ni2 = ni1 + 1;
+
+	AlphaBeta ab(pars);
+	complex_mkl z;
+	z.real = 35.0;
+	z.imag = 0.1;
+	calculateAllGF(ni1, ni2, z, ab);
+	IntegerMatrix indexMatrix;
+	ab.FillIndexMatrix(indexMatrix);
+	int n = ni1 + 2;
+	int m = n + 1;
+	complex_mkl gf = extractMatrixElement(n, m, ni1, ni2, indexMatrix);
+	EXPECT_EQ(2,2);
+}
