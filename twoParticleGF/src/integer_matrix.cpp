@@ -116,5 +116,7 @@ IntegerMatrix::IntegerMatrix(int *a, const int row_count, const int column_count
    IntegerMatrix::~IntegerMatrix() {
      // clean up allocated memory
      delete [] p;
+     rows = 0;
+     cols = 0;
      p = NULL;
    }

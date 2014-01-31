@@ -566,6 +566,8 @@ ComplexMatrix::ComplexMatrix(const ComplexMatrix& a){
 ComplexMatrix::~ComplexMatrix() {
     // clean up allocated memory
     delete [] p;
+    rows = 0;
+    cols = 0;
     p = NULL;
   }
 

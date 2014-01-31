@@ -101,6 +101,13 @@ public:
 		return p[nx*cols + ny];
 	}
 
+	~OnsiteDisorder() {
+		delete [] p;
+		p = NULL;
+		rows = 0;
+		cols = 0;
+	}
+
 private:
 	int rows;
 	int cols;

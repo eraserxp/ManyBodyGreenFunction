@@ -37,7 +37,7 @@ void generateInitialState(Parameters& pars,  int impuritySite, double K, PairVec
 		separation_max++;
 	} while (decayFactor<base*0.01);
 
-	int rows = (nmax - separation_max + 1)*separation_max; // this is the dimension of biexciton state
+	int rows = (nmax - separation_max + 1)*separation_max; // the dimension of biexciton state
 	initialState = ComplexMatrix(rows, 1);
 	// to record the position of disorder basis in biexciton basis
 	disorderBasisPosition = IntegerMatrix(nmax, separation_max+1);
@@ -73,7 +73,7 @@ void calculateScatteringState(Parameters& pars, double K, int impuritySite, doub
 	PairVector disorderBasis;
 	ComplexMatrix initialState;
 	IntegerMatrix disorderBasisPosition;
-	//printf("1.1\n");
+//	printf("1.1\n");
 
 	// calculate the initial state
 	generateInitialState(pars,  impuritySite, K,  biexcitonBasis,
@@ -146,8 +146,9 @@ void calculateScatteringState(Parameters& pars, double K, int impuritySite, doub
 //	printf("1.11\n");
 	TMatrix.InverseInPlace();
 //	printf("1.12\n");
-	TMatrix = h1*TMatrix;
+	ComplexMatrix tmp2 = h1*TMatrix;
 //	printf("1.13\n");
+	TMatrix = tmp2;
 
 	ComplexMatrix initial_disorder(disorder_size, 1); // initial state in disorder basis
 //	printf("1.14\n");
@@ -158,17 +159,19 @@ void calculateScatteringState(Parameters& pars, double K, int impuritySite, doub
 		int nth = disorderBasisPosition(n, m-n);
 		initial_disorder(i,0) = initialState(nth, 0);
 	}
-	printf("1.15\n");
+//	printf("1.15\n");
 	ComplexMatrix beta_T = TMatrix*initial_disorder;
-	printf("1.16\n");
+//	printf("1.16\n");
 	ComplexMatrix beta_GT = gf_biexciton*beta_T;
-	printf("1.17\n");
+//	printf("1.17\n");
 	ComplexMatrix tmp = initialState + beta_GT;
-	printf("1.18\n");
+	//scatteringState = initialState + beta_GT;
+//	printf("1.18\n");
 	scatteringState = tmp;
+//	printf("1.19\n");
 
 	// calculate the transmission coefficient at the position far away from the disorder site
-	int nth = disorderBasisPosition(90,1);
+	int nth = disorderBasisPosition(pars.nmax-6,1);
 	dcomplex  original = dcomplex(initialState(nth,0).real, initialState(nth,0).imag);
 	dcomplex  transmitted = dcomplex(scatteringState(nth,0).real, scatteringState(nth,0).imag);
 	dcomplex ratio = transmitted/original;

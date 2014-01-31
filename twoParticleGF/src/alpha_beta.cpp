@@ -39,7 +39,9 @@ double Hamiltonian::d(int n, int m) {
 	return d0 + rnm_d0(n,m)*d0MaxDisorder;
 }
 
+Hamiltonian::~Hamiltonian() {
 
+}
 
 // generate an index matrix Index[i][j] = nth which represents the Green's function G(i,j)
 // is the nth item in vector V_{i+j}
@@ -204,6 +206,10 @@ complex_mkl AlphaBeta::GetFactor(int ni1, int ni2, complex_mkl z) {
 				             z.imag};
 }
 
+// destroy the class
+AlphaBeta::~AlphaBeta() {
+
+}
 
 void changeElements(ComplexMatrix& cm) {
 	int rows = cm.GetRows();

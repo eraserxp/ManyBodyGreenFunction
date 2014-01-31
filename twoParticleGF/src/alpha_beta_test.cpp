@@ -380,6 +380,14 @@ TEST(CalculateAllGF, checkIO) {
 	z.imag = 0.1;
 	calculateAllGF(ni1, ni2, z, ab);
 
+	z.real = 15.0;
+	z.imag = 0.1;
+	calculateAllGF(ni1, ni2, z, ab);
+
+	z.real = 5.0;
+	z.imag = 0.1;
+	calculateAllGF(ni1, ni2, z, ab);
+
 	EXPECT_EQ(2,2);
 }
 

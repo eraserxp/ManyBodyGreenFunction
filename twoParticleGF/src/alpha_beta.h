@@ -33,6 +33,8 @@ public:
 
 	double d(int n, int m);
 
+	~Hamiltonian();
+
 private:
 	int nmax;
 	double e0, t0, d0;
@@ -60,6 +62,7 @@ public:
 	int GetNmax();
 	// obtain the factor in front of G(ni1, ni2) in the equations for Green's functions
 	complex_mkl GetFactor(int ni1, int ni2, complex_mkl z);
+	~AlphaBeta();
 
 private:
 	int nmax;

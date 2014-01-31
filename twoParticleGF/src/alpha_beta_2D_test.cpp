@@ -114,7 +114,7 @@ TEST(GenerateNeighbors2DTest, ThreeByThreeCrystal) {
 	EXPECT_TRUE(neighbor==compare);
 }
 
-TEST(SolveVnc2DTest, Small) {
+TEST(SolveVnc2DTest, DISABLED_Small) {
 	Parameters2D pars;
 	pars.xmax = 15;
 	pars.ymax = 15;
