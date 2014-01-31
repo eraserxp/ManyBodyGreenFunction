@@ -18,6 +18,8 @@
 #include "integer_matrix.h"
 #include "gtest/gtest.h"
 #include "alpha_beta_2D.h"
+#include "scattering.h"
+
 
 
 void someTest() {
@@ -259,6 +261,31 @@ void test_2d() {
 
 
 
+void scatteringTest() {
+	Parameters pars;
+	pars.nmax = 100;
+	pars.e0 = 0.0;
+	pars.t0 = 5.0;
+	pars.d0 = 15.0;
+	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
+	pars.e0seed = pars.t0seed = pars.d0seed = 1;
+
+	double K = M_PI/2.0;
+	int impuritySite = pars.nmax/2;
+	double disorderStrength = 15.0;
+	ComplexMatrix scatteringState;
+	printf("1\n");
+	double transmission;
+	calculateScatteringState(pars, K, impuritySite, disorderStrength, scatteringState, transmission);
+	printf("transmission = %f\n", transmission);
+
+	K = M_PI/3.0;
+	calculateScatteringState(pars, K, impuritySite, disorderStrength, scatteringState, transmission);
+	printf("transmission = %f\n", transmission);
+
+}
+
+
 
 int main(int argc, char **argv){
 
@@ -268,6 +295,8 @@ int main(int argc, char **argv){
 
 //	checkSparseness();
 //	test_2d();
+
+	scatteringTest();
 
 	::testing::InitGoogleTest(&argc, argv);
 	int i= RUN_ALL_TESTS();

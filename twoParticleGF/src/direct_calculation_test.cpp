@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "mics.h"
 
-TEST(DirectCalculationTest, CheckDOS) {
+TEST(DirectCalculationTest, DISABLED_CheckDOS) {
 	InputParameters pars;
 	pars.nmax = 100;
 	pars.t0 = 5.0;

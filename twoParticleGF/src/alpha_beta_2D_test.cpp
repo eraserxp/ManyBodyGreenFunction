@@ -141,7 +141,7 @@ TEST(SolveVnc2DTest, Small) {
 
 
 
-TEST(GenerateDensityOfState2D, SmallCrystal) {
+TEST(GenerateDensityOfState2D, DISABLED_SmallCrystal) {
 	Parameters2D pars;
 	pars.xmax = 10;
 	pars.ymax = 10;
