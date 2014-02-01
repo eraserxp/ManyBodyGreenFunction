@@ -228,6 +228,8 @@ void changeElements(ComplexMatrix& cm) {
 	}
 }
 
+
+
 // The following is a slow version that calculates the inverse of matirx
 //ComplexMatrix fromRightToCenter(int Kc, complex_double z, AlphaBeta& ab) {
 //	int nmax = ab.GetNmax();

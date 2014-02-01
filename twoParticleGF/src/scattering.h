@@ -14,6 +14,8 @@
 #include "integer_matrix.h"
 #include "alpha_beta.h"
 
+void changeElements(CDMatrix& cm);
+
 double biexcitonEnergy(double K, double t, double d);
 
 double psi(int separation, double K, double t, double d, int nmol);
@@ -22,7 +24,14 @@ void generateInitialState(Parameters& pars,  int impuritySite, double K, PairVec
 		    PairVector& disorderBasis, ComplexMatrix& initialState,
 		    IntegerMatrix& disorderBasisPosition);
 
+void generateInitialState2(Parameters& pars,  int impuritySite, double K, PairVector& biexcitonBasis,
+		    PairVector& disorderBasis, CDVector& initialState,
+		    IMatrix& disorderBasisPosition);
+
 void calculateScatteringState(Parameters& pars, double K, int impuritySite, double disorderStrength,
 		                      ComplexMatrix& scatteringState, double& transmissionCoeff);
+
+void calculateScatteringState2(Parameters& pars, double K, int impuritySite, double disorderStrength,
+		                      CDVector& scatteringState, double& transmissionCoeff);
 
 #endif /* SCATTERING_H_ */
