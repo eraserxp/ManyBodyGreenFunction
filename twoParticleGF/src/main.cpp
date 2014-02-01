@@ -285,7 +285,7 @@ void scatteringTest() {
 		double K = K_array[i];
 		calculateScatteringState(pars, K, impuritySite, disorderStrength, scatteringState, transmission);
 		transmission_array.push_back(transmission);
-		printf("transmission = %f\n", transmission);
+		printf("K=%f     transmission = %f\n", K, transmission);
 	}
 	// save to the disk
 	//save_two_arrays("transmission_vs_k.txt",K_array, transmission_array);
@@ -316,7 +316,7 @@ void scatteringTest2() {
 		double K = K_array[i];
 		calculateScatteringState2(pars, K, impuritySite, disorderStrength, scatteringState, transmission);
 		transmission_array.push_back(transmission);
-		printf("transmission = %f\n", transmission);
+		printf("K=%f     transmission = %f\n", K, transmission);
 	}
 	// save to the disk
 	//save_two_arrays("transmission_vs_k.txt",K_array, transmission_array);

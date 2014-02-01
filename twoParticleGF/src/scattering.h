@@ -20,16 +20,19 @@ double biexcitonEnergy(double K, double t, double d);
 
 double psi(int separation, double K, double t, double d, int nmol);
 
+// use my own matrix class (there are memory leaks somewhere)
 void generateInitialState(Parameters& pars,  int impuritySite, double K, PairVector& biexcitonBasis,
 		    PairVector& disorderBasis, ComplexMatrix& initialState,
 		    IntegerMatrix& disorderBasisPosition);
 
+void calculateScatteringState(Parameters& pars, double K, int impuritySite, double disorderStrength,
+		                      ComplexMatrix& scatteringState, double& transmissionCoeff);
+
+
+// use the matrix class from eigen c++
 void generateInitialState2(Parameters& pars,  int impuritySite, double K, PairVector& biexcitonBasis,
 		    PairVector& disorderBasis, CDVector& initialState,
 		    IMatrix& disorderBasisPosition);
-
-void calculateScatteringState(Parameters& pars, double K, int impuritySite, double disorderStrength,
-		                      ComplexMatrix& scatteringState, double& transmissionCoeff);
 
 void calculateScatteringState2(Parameters& pars, double K, int impuritySite, double disorderStrength,
 		                      CDVector& scatteringState, double& transmissionCoeff);
