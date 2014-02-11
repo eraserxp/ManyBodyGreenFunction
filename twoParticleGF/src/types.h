@@ -177,6 +177,7 @@ private:
 
 typedef std::list<Quartet> QuartetList;
 typedef std::vector< Pair > PairVector;
+typedef std::vector<double> Vector;
 
 // we use the linked-list to save memory
 // each item of the vector is a list of quartet which is expandable

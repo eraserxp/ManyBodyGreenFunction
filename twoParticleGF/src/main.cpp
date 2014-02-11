@@ -297,18 +297,18 @@ void scatteringTest2() {
 	pars.nmax = 200;
 	pars.e0 = 0.0;
 	pars.t0 = 1.0;
-	pars.d0 = 3.0;
+	pars.d0 = 5.0;
 	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 
-	std::vector<double> K_array = linspace(-M_PI*0.99,0.0,10);
+	std::vector<double> K_array = linspace(-M_PI*0.99,M_PI*0.99,21);
 //	K_array.push_back(-M_PI/2.0);
 //	K_array.push_back(0.0);
 //	K_array.push_back(M_PI/2.0);
 
 	std::vector<double> transmission_array;
 	int impuritySite = pars.nmax/2;
-	double disorderStrength = 15.0;
+	double disorderStrength = 5.0;
 
 	for (int i=0; i<K_array.size();++i) {
 		CDVector scatteringState;
@@ -319,7 +319,7 @@ void scatteringTest2() {
 		printf("K=%f     transmission = %f\n", K, transmission);
 	}
 	// save to the disk
-	//save_two_arrays("transmission_vs_k.txt",K_array, transmission_array);
+	save_two_arrays("transmission_vs_k.txt",K_array, transmission_array);
 
 }
 
@@ -333,10 +333,10 @@ int main(int argc, char **argv){
 //	test_2d();
 
 	scatteringTest2();
-	scatteringTest();
+//	scatteringTest();
 
-//	::testing::InitGoogleTest(&argc, argv);
-//	int i= RUN_ALL_TESTS();
+	::testing::InitGoogleTest(&argc, argv);
+	int i= RUN_ALL_TESTS();
 
 
 

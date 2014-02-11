@@ -14,6 +14,10 @@
 #include "integer_matrix.h"
 #include "alpha_beta.h"
 
+void printMatrix(CDMatrix& m);
+
+void normalizeWavefunction(CDVector& v);
+
 void changeElements(CDMatrix& cm);
 
 double biexcitonEnergy(double K, double t, double d);
