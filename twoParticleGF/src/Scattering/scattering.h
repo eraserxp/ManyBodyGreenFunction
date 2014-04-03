@@ -13,7 +13,7 @@
 #include "../MyMatrixClass/complex_matrix.h"
 #include "../MyMatrixClass/integer_matrix.h"
 #include "../1D/alpha_beta.h"
-#include "direct_calculation.h"
+#include "../1D/direct_calculation.h"
 
 void printMatrix(CDMatrix& m);
 
