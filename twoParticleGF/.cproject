@@ -17,7 +17,12 @@
 					<folderInfo id="intel.linux.x86_64.exe.rel.444736407._12.0.0" name="/" resourcePath="">
 						<toolChain errorParsers="" id="intel.toolchain.linux.x86_64.exe.rel.1588754016_12.0.0" name="Intel Toolchain for Executable on Intel(R) 64" superClass="intel.toolchain.linux.x86_64.exe.rel_12.0.0">
 							<targetPlatform archList="x86_64" binaryParser="org.eclipse.cdt.core.ELF" id="intel.platform.linux.x86_64.exe.rel_12.0.0.610117025" name="Platform.Executable.Release" osList="linux" superClass="intel.platform.linux.x86_64.exe.rel_12.0.0"/>
-							<builder buildPath="${workspace_loc:/twoParticle1D/Release}" errorParsers="" id="intel.builder.linux.x86_64.exe.rel.751356906_12.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.rel_12.0.0"/>
+							<builder buildPath="${workspace_loc:/twoParticle1D/Release}" errorParsers="" id="intel.builder.linux.x86_64.exe.rel.751356906_12.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.rel_12.0.0">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
+								</outputEntries>
+							</builder>
 							<tool command="icc -O3  -openmp -mkl=parallel -wd279 -Wall -std=c++0x -DNDEBUG" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.ICCErrorParser" id="intel.cpp.compilestep.linux.x86_64.exe.rel.904803236_12.0.0" name="Intel Intel(R) 64 C++ Compiler " superClass="intel.cpp.compilestep.linux.x86_64.exe.rel_12.0.0">
 								<option id="intel.compilestep.preprocessor.includedirectories.135570594" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/include"/>
@@ -30,17 +35,16 @@
 							<tool command="icc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.ICCErrorParser" id="intel.c.compilestep.linux.x86_64.exe.rel.1583539574_12.0.0" name="Intel Intel(R) 64 C Compiler" superClass="intel.c.compilestep.linux.x86_64.exe.rel_12.0.0">
 								<option id="intel.compilestep.preprocessor.includedirectories.1879001387" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0/include"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/eigen"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/boost/include"/>
+									<listOptionValue builtIn="false" value="/home/pxiang/gsl_icc/include"/>
 								</option>
 								<inputType id="intel.c.compilestep.input.614552239" superClass="intel.c.compilestep.input"/>
 							</tool>
 							<tool id="intel.c.linkstep.linux.x86_64.exe.rel.323948756_12.0.0" name="Intel Intel(R) 64 C Linker" superClass="intel.c.linkstep.linux.x86_64.exe.rel_12.0.0"/>
 							<tool command="icc -O3  -openmp -mkl=parallel -wd279 -Wall -std=c++0x -isystem  -DNDEBUG" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.ICCErrorParser" id="intel.cpp.linkstep.linux.x86_64.exe.rel.87426667_12.0.0" name="Intel Intel(R) 64 C++ Linker" superClass="intel.cpp.linkstep.linux.x86_64.exe.rel_12.0.0">
 								<option id="intel.linkstep.libname.1918700884" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs">
-									<listOptionValue builtIn="false" value="imf"/>
-									<listOptionValue builtIn="false" value="m"/>
-									<listOptionValue builtIn="false" value="gsl"/>
 									<listOptionValue builtIn="false" value="gtest"/>
-									<listOptionValue builtIn="false" value="pthread"/>
 								</option>
 								<option id="intel.linkstep.libpath.574581772" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="/home/pxiang/gtest-1.7.0"/>
@@ -57,8 +61,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="matrix|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -436,8 +440,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry excluding="matrix|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-						<entry excluding="src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

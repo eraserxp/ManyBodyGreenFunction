@@ -149,7 +149,7 @@ void generateInitialState2(Parameters& pars,  int impuritySite, double K, PairVe
 				disorderBasis.push_back(basis);
 				disorderBasisPosition(i,sep) = nth;
 			}
-			dcomplex tmp = std::exp(ii*(i*1.0+j*1.0)/2.0)* \
+			dcomplex tmp = 2.0*std::exp(ii*K*(i*1.0+j*1.0)/2.0)* \
 					psi(sep, K, pars.t0, pars.d0, pars.nmax + 1);
 			initialState(nth) = tmp;
 			nth++;
@@ -304,7 +304,7 @@ void calculateScatteringState2(Parameters& pars, double K, int impuritySite, dou
 	CDMatrix h1(disorder_size, disorder_size);
 	complex_mkl z;
 	z.real = biexcitonEnergy(K,pars.t0,pars.d0); // the biexciton energy is determined by K
-	z.imag = 0.001;
+	z.imag = 0.0001;
 
 //	printf("1.4\n");
 	for (int c=0; c<disorder_size; ++c) {
@@ -403,119 +403,40 @@ void calculateScatteringState2(Parameters& pars, double K, int impuritySite, dou
 
 
 // calculate the scattering state making use of direct diagonalization
-void calculateScatteringState_direct(Parameters& pars, double K, int impuritySite, double disorderStrength,
-		                      CDVector& scatteringState, double& transmissionCoeff) {
-
-	PairVector biexcitonBasis;
-	PairVector disorderBasis;
-	CDVector initialState;
-	IMatrix disorderBasisPosition;
-//	printf("1.1\n");
-
-	// calculate the initial state
-	generateInitialState2(pars,  impuritySite, K,  biexcitonBasis,
-			    disorderBasis, initialState, disorderBasisPosition);
-
-//	printf("1.2\n");
-	AlphaBeta ab(pars);
-	IntegerMatrix indexMatrix;
-	ab.FillIndexMatrix(indexMatrix);
-
-//	printf("1.3\n");
-
-	int biexciton_size = biexcitonBasis.size();
-	int disorder_size = disorderBasis.size();
-	//green's function in the biexciton basis and disorder basis
-	CDMatrix gf_biexciton(biexciton_size, disorder_size);
-
-	//green's function in the disorder basis
-	CDMatrix gf_disorder(disorder_size, disorder_size);
-
-	CDMatrix h1(disorder_size, disorder_size);
-	complex_mkl z;
-	z.real = biexcitonEnergy(K,pars.t0,pars.d0); // the biexciton energy is determined by K
-	z.imag = 0.001;
-
-//	printf("1.4\n");
-	for (int c=0; c<disorder_size; ++c) {
-		Pair basis = disorderBasis[c];
-		int ni1 = basis.First();
-		int ni2 = basis.Second();
-//		printf("1.5\n");
-		// calculate all elements of Green's function and save them into disk
-		// ni1 and ni2 are the initial positions of the two excitations
-		calculateAllGF(ni1, ni2,z,ab);
-//		printf("1.6\n");
-
-		for (int r=0; r<biexciton_size; ++r) {
-			basis = biexcitonBasis[r];
-			int nf1 = basis.First();
-			int nf2 = basis.Second();
-			// calculate the green's function in the biexciton basis
-			complex_mkl tmp = extractMatrixElement(nf1, nf2, ni1, ni2, indexMatrix);
-			gf_biexciton(r,c) = dcomplex(tmp.real, tmp.imag);
-
-		}
-
-//		printf("1.7\n");
-
-		for (int r=0; r<disorder_size; ++r) {
-			// calculate the green's function in the disorder basis
-			basis = disorderBasis[r];
-			int nf1 = basis.First();
-			int nf2 = basis.Second();
-			complex_mkl tmp = extractMatrixElement(nf1, nf2, ni1, ni2, indexMatrix);
-			gf_disorder(r,c) = dcomplex(tmp.real, tmp.imag);
-			//std::cout << r << "  " << c << "  " << gf_disorder(r,c) << std::endl;
-			// form matrix h1
-			if (r==c) {
-				h1(r,c) = dcomplex(disorderStrength, 0.0);
-				//std::cout << "h1 " << r << "  " << c << "  " << h1(r,c) << std::endl;
-			} else {
-				h1(r,c) = dcomplex(0.0, 0.0);
-
-			}
-		}
-//		printf("1.8\n");
-	}
-
-//	printf("1.9\n");
-	// T matrix in disorder basis
-	CDMatrix TMatrix = gf_disorder*h1;
-//	printf("1.10\n");
-	changeElements(TMatrix);//calculate 1 - gf_disorder*h1
-//	printf("1.11\n");
-	TMatrix = TMatrix.inverse();
-//	printf("1.12\n");
-	CDMatrix tmp2 = h1*TMatrix;
-//	printf("1.13\n");
-	TMatrix = tmp2;
-
-	CDVector initial_disorder(disorder_size); // initial state in disorder basis
-//	printf("1.14\n");
-	for (int i=0; i<disorder_size; ++i) {
-		Pair basis = disorderBasis[i];
-		int n = basis.First();
-		int m = basis.Second();
-		int nth = disorderBasisPosition(n, m-n);
-		initial_disorder(i) = initialState(nth);
-	}
-//	printf("1.15\n");
-	CDVector beta_T = TMatrix*initial_disorder;
-//	printf("1.16\n");
-	CDVector beta_GT = gf_biexciton*beta_T;
-//	printf("1.17\n");
-	CDVector tmp = initialState + beta_GT;
-	//scatteringState = initialState + beta_GT;
-//	printf("1.18\n");
-	scatteringState = tmp;
-//	printf("1.19\n");
-
-	// calculate the transmission coefficient at the position far away from the disorder site
-	int nth = disorderBasisPosition(pars.nmax-8,1);
-	dcomplex  original = initialState(nth);
-	dcomplex  transmitted = scatteringState(nth);
-	dcomplex ratio = transmitted/original;
-	transmissionCoeff = std::abs(ratio)*std::abs(ratio);
-}
+//void calculateScatteringState_direct(InputParameters& pars, DVector& transmissionCoeff) {
+//
+//	int nmax = pars.nmax;
+//	IMatrix indexMatrix;
+//	PairVector basisSets;
+//	formBasisSets(nmax, indexMatrix, basisSets);
+//
+//	DMatrix hamiltonian;
+//	formHamiltonianMatrix(pars, hamiltonian, indexMatrix, basisSets);
+//
+//	DVector eigenValues;
+//	DMatrix eigenVectors;
+//	obtainEigenVectors(hamiltonian, eigenValues, eigenVectors);
+//
+//	int n1f = n1i;
+//	int n2f = n2i;
+//	CDArray numerator;
+//	numeratorHelper(n1f, n2f, n1i, n2i, indexMatrix, eigenVectors, numerator);
+//
+//	dosList.clear();
+//	dosList.reserve(zList.size());
+//	for (int i=0; i<zList.size(); ++i) {
+//		dcomplex z = zList[i];
+//		CDArray oneOverDenominator;
+//		denominatorHelper(z, eigenValues, oneOverDenominator);
+//		dcomplex gf = greenFunc(numerator, oneOverDenominator);
+//		dosList[i] = -gf.imag()/M_PI;
+//	}
+//
+//	// calculate the transmission coefficient at the position far away from the disorder site
+//	int nth = disorderBasisPosition(pars.nmax-8,1);
+//	dcomplex  original = initialState(nth);
+//	dcomplex  transmitted = scatteringState(nth);
+//	dcomplex ratio = transmitted/original;
+//	transmissionCoeff = std::abs(ratio)*std::abs(ratio);
+//}
 

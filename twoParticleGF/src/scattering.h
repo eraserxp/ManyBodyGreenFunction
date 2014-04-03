@@ -13,6 +13,7 @@
 #include "complex_matrix.h"
 #include "integer_matrix.h"
 #include "alpha_beta.h"
+#include "direct_calculation.h"
 
 void printMatrix(CDMatrix& m);
 
@@ -40,5 +41,7 @@ void generateInitialState2(Parameters& pars,  int impuritySite, double K, PairVe
 
 void calculateScatteringState2(Parameters& pars, double K, int impuritySite, double disorderStrength,
 		                      CDVector& scatteringState, double& transmissionCoeff);
+
+void calculateScatteringState_direct(InputParameters& pars, DVector& transmissionCoeff);
 
 #endif /* SCATTERING_H_ */

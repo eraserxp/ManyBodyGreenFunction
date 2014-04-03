@@ -129,6 +129,7 @@ dcomplex greenFunc(CDArray& numerator, CDArray& oneOverDenominator) {
 }
 
 
+
 // calculate the density of state at (ni1, ni2)
 void densityOfState_direct(InputParameters& pars, int n1i, int n2i, std::vector<dcomplex >& zList,
 		                   std::vector<double>& dosList) {

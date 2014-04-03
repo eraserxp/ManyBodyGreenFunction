@@ -301,14 +301,14 @@ void scatteringTest2() {
 	pars.e0MaxDisorder = pars.t0MaxDisorder = pars.d0MaxDisorder = 0.0;
 	pars.e0seed = pars.t0seed = pars.d0seed = 1;
 
-	std::vector<double> K_array = linspace(-M_PI*0.99,M_PI*0.99,21);
+	std::vector<double> K_array = linspace(-M_PI*0.96,M_PI*0.96,21);
 //	K_array.push_back(-M_PI/2.0);
 //	K_array.push_back(0.0);
 //	K_array.push_back(M_PI/2.0);
 
 	std::vector<double> transmission_array;
 	int impuritySite = pars.nmax/2;
-	double disorderStrength = 5.0;
+	double disorderStrength = 3.5; //13000.0;
 
 	for (int i=0; i<K_array.size();++i) {
 		CDVector scatteringState;
@@ -322,6 +322,18 @@ void scatteringTest2() {
 	save_two_arrays("transmission_vs_k.txt",K_array, transmission_array);
 
 }
+
+//void scattering_direct() {
+//	InputParameters pars;
+//	pars.nmax = 100;
+//	pars.t0 = 1.0;
+//	pars.d0 = 5.0;
+//	pars.impurityIndex.clear();
+//	pars.impurityStrength.clear();
+//
+//	DVector transmissionCoeff;
+//	calculateScatteringState_direct(pars, transmissionCoeff);
+//}
 
 int main(int argc, char **argv){
 
