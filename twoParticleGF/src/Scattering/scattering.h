@@ -8,11 +8,11 @@
 #ifndef SCATTERING_H_
 #define SCATTERING_H_
 
-#include "types.h"
+#include "../Utility/types.h"
 #include <math.h>       /* cos */
-#include "complex_matrix.h"
-#include "integer_matrix.h"
-#include "alpha_beta.h"
+#include "../MyMatrixClass/complex_matrix.h"
+#include "../MyMatrixClass/integer_matrix.h"
+#include "../1D/alpha_beta.h"
 #include "direct_calculation.h"
 
 void printMatrix(CDMatrix& m);

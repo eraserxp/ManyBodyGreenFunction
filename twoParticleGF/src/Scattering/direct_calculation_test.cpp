@@ -7,7 +7,7 @@
 
 #include "direct_calculation.h"
 #include "gtest/gtest.h"
-#include "mics.h"
+#include "../Utility/mics.h"
 
 TEST(DirectCalculationTest, DISABLED_CheckDOS) {
 	InputParameters pars;

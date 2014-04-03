@@ -8,13 +8,13 @@
 #ifndef GENERATE_ALPHA_BETA_H_
 #define GENERATE_ALPHA_BETA_H_
 
-#include "types.h"
-#include "mics.h"
-#include "complex_matrix.h"
-#include "integer_matrix.h"
+#include "../Utility/types.h"
+#include "../Utility/mics.h"
+#include "../MyMatrixClass/complex_matrix.h"
+#include "../MyMatrixClass/integer_matrix.h"
 
-#include "random_generator.h"
-#include "binaryIO.h"
+#include "../Utility/random_generator.h"
+#include "../IO/binaryIO.h"
 
 
 #include <vector>

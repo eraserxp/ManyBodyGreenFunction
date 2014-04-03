@@ -5,7 +5,7 @@
  *      Author: pxiang
  */
 #include "binaryIO.h"
-#include "types.h"
+
 
 // write the content of a ComplexMatrix into a binary file
 // store the rows_count and column_count first

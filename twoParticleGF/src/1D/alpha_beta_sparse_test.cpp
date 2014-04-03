@@ -7,7 +7,7 @@
 
 #include "alpha_beta_sparse.h"
 #include "gtest/gtest.h"
-#include "mics.h"
+#include "../Utility/mics.h"
 
 
 TEST(AlphaBetaSPTest, DISABLED_FourSitesNoDisorder) {

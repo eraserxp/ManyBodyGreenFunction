@@ -7,8 +7,8 @@
 
 #include "scattering.h"
 #include "gtest/gtest.h"
-#include "mics.h"
-#include "types.h"
+#include "../Utility/mics.h"
+#include "../Utility/types.h"
 
 TEST(ScatteringStateTest, OneHundred) {
 	Parameters pars;

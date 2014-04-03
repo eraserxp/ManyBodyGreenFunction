@@ -11,8 +11,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "complex_matrix.h"
-#include "random_generator.h"
+#include "../MyMatrixClass/complex_matrix.h"
+#include "../Utility/random_generator.h"
+#include "../Utility/types.h"
 
 int complexMatrixToBytes(ComplexMatrix& cm, std::string filename);
 int bytesToComplexMatrix(ComplexMatrix& cm, std::string filename);

@@ -8,8 +8,8 @@
 #ifndef DIRECT_CALCULATION_H_
 #define DIRECT_CALCULATION_H_
 
-#include "types.h"
-#include "alpha_beta.h"
+#include "../Utility/types.h"
+#include "../1D/alpha_beta.h"
 
 struct InputParameters {
 	int nmax;

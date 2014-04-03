@@ -7,18 +7,18 @@
 
 //#include <cstdio>
 //
-#include "types.h"
-#include "mics.h"
+#include "Utility/types.h"
+#include "Utility/mics.h"
 
-#include "random_generator.h"
-#include "alpha_beta.h"
-#include "alpha_beta_sparse.h"
-#include "matrix.h"
-#include "complex_matrix.h"
-#include "integer_matrix.h"
+#include "Utility/random_generator.h"
+#include "1D/alpha_beta.h"
+#include "1D/alpha_beta_sparse.h"
+#include "MyMatrixClass/matrix.h"
+#include "MyMatrixClass/complex_matrix.h"
+#include "MyMatrixClass/integer_matrix.h"
 #include "gtest/gtest.h"
-#include "alpha_beta_2D.h"
-#include "scattering.h"
+#include "2D/alpha_beta_2D.h"
+#include "Scattering/scattering.h"
 
 
 
@@ -344,7 +344,7 @@ int main(int argc, char **argv){
 //	checkSparseness();
 //	test_2d();
 
-	scatteringTest2();
+//	scatteringTest2();
 //	scatteringTest();
 
 	::testing::InitGoogleTest(&argc, argv);

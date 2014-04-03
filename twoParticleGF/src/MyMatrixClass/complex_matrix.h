@@ -12,7 +12,7 @@
 #include <cstdio>
 #include <math.h>
 
-#include "types.h"
+#include "../Utility/types.h"
 #include "mkl.h"
 #include "mkl_lapacke.h"
 

@@ -7,13 +7,13 @@
 #ifndef ALPHA_BETA_2D_H_
 #define ALPHA_BETA_2D_H_
 
-#include "types.h"
-#include "mics.h"
-#include "complex_matrix.h"
-#include "integer_matrix.h"
+#include "../Utility/types.h"
+#include "../Utility/mics.h"
+#include "../MyMatrixClass/complex_matrix.h"
+#include "../MyMatrixClass/integer_matrix.h"
 
-#include "random_generator.h"
-#include "alpha_beta.h"
+#include "../Utility/random_generator.h"
+#include "../1D/alpha_beta.h"
 
 
 #include <vector>
