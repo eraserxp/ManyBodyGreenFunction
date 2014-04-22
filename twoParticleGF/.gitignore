@@ -1,2 +1,4 @@
 /Release
 /libgtest.a
+.cproject
+.project
